@@ -20,9 +20,19 @@ function App() {
             element={<Navigate to={isAuth ? "/home" : "/login"} />}
           />
           {!isAuth && <Route path="/login" element={<Login />} />}
+          {isAuth && (
+            <Route path="/login" element={<Navigate to="/profile" />} />
+          )}
           {!isAuth && <Route path="/register" element={<Register />} />}
+          {isAuth && (
+            <Route path="/register" element={<Navigate to="/profile" />} />
+          )}
           {isAuth && <Route path="/home" element={<Home />} />}
+          {!isAuth && <Route path="/home" element={<Navigate to="/login" />} />}
           {isAuth && <Route path="/profile" element={<Profile />} />}
+          {!isAuth && (
+            <Route path="/profile" element={<Navigate to="/login" />} />
+          )}
         </Routes>
       </Container>
     </>
