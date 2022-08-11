@@ -4,6 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { authActions } from "../store/auth-slice";
+import { LinkContainer } from "react-router-bootstrap";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -28,6 +29,9 @@ const Register = () => {
           onFormSubmit={registerUserHandler}
           registerError={registerError}
         />
+        <LinkContainer to="/login">
+          <Card.Link>Already have an account? Login here</Card.Link>
+        </LinkContainer>
       </Card.Body>
     </Card>
   );
