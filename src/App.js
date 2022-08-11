@@ -58,10 +58,14 @@ function App() {
             <Route path="/register" element={<Navigate to="/profile" />} />
           )}
           {isAuth && <Route path="/home" element={<Home />} />}
-          {!isAuth && <Route path="/home" element={<Navigate to="/login" />} />}
-          {isAuth && <Route path="/profile" element={<Profile />} />}
-          {!isAuth && (
-            <Route path="/profile" element={<Navigate to="/login" />} />
+          {isAuth && (
+            <Route path="/profile" element={<Profile forAuthUser={true} />} />
+          )}
+          {isAuth && (
+            <Route
+              path="/profile/:id"
+              element={<Profile forAuthUser={false} />}
+            />
           )}
         </Routes>
       </Container>
