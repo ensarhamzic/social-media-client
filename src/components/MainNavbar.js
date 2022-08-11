@@ -3,10 +3,18 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { LinkContainer } from "react-router-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Button } from "react-bootstrap";
+import { authActions } from "../store/auth-slice";
 
 const MainNavbar = () => {
   const isAuth = useSelector((state) => state.auth.isAuth);
+  const dispatch = useDispatch();
+
+  const logoutHandler = () => {
+    dispatch(authActions.logout());
+  };
+
   let navLinks = (
     <>
       <LinkContainer to="/login">
@@ -27,6 +35,9 @@ const MainNavbar = () => {
         <LinkContainer to="/profile">
           <Nav.Link>Profile</Nav.Link>
         </LinkContainer>
+        <Button onClick={logoutHandler} variant="light">
+          Logout
+        </Button>
       </>
     );
   }
