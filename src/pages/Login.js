@@ -4,6 +4,7 @@ import { Card } from "react-bootstrap";
 import { authActions } from "../store/auth-slice";
 import LoginForm from "../components/LoginForm";
 import axios from "axios";
+import { LinkContainer } from "react-router-bootstrap";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -25,6 +26,9 @@ const Login = () => {
       <Card.Body>
         <Card.Title>Login to your account</Card.Title>
         <LoginForm onFormSubmit={loginUserHandler} loginError={loginError} />
+        <LinkContainer to="/register">
+          <Card.Link>Don't have an account yet? Register here</Card.Link>
+        </LinkContainer>
       </Card.Body>
     </Card>
   );
