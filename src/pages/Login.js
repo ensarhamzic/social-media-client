@@ -14,9 +14,9 @@ const Login = () => {
   const loginUserHandler = async (user) => {
     try {
       const response = await axios.post(`${API_URL}/users/login`, user);
-      const { token } = response.data;
+      const { token, user: userData } = response.data;
       setLoginError(null);
-      dispatch(authActions.login({ token }));
+      dispatch(authActions.login({ token, user: userData }));
     } catch (error) {
       setLoginError(error.response.data.message);
     }

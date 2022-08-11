@@ -14,9 +14,9 @@ const Register = () => {
   const registerUserHandler = async (user) => {
     try {
       const response = await axios.post(`${API_URL}/users/register`, user);
-      const { token } = response.data;
+      const { token, user: newUserData } = response.data;
       setRegisterError(null);
-      dispatch(authActions.login({ token }));
+      dispatch(authActions.login({ token, user: newUserData }));
     } catch (error) {
       setRegisterError(error.response.data.message);
     }

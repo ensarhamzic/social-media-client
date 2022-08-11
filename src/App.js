@@ -21,7 +21,7 @@ function App() {
     const token = localStorage.getItem("token");
     const verifyToken = async (userToken) => {
       try {
-        await axios.post(
+        const response = await axios.post(
           `${API_URL}/users/verify`,
           {},
           {
@@ -30,10 +30,9 @@ function App() {
             },
           }
         );
-        dispatch(authActions.login({ token }));
-        console.log("a");
+        const { user } = response.data;
+        dispatch(authActions.login({ token, user }));
       } catch (error) {
-        console.log("b");
         localStorage.removeItem("token");
       }
     };
