@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Card from "react-bootstrap/Card";
@@ -7,35 +7,9 @@ import NewPostForm from "./NewPostForm";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-const Posts = ({ userId }) => {
+const Posts = ({ posts, user, onAddPost }) => {
   const token = useSelector((state) => state.auth.token);
   const authUserId = useSelector((state) => state.auth.user.id);
-  const [posts, setPosts] = useState([]);
-  const [user, setUser] = useState({});
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const getPosts = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/users/${userId}/posts`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setPosts(
-          response.data.posts.sort((a, b) => {
-            return new Date(b.date) - new Date(a.date);
-          })
-        );
-        setUser({ id: response.data.id, username: response.data.username });
-        setError(null);
-      } catch (error) {
-        setError("Something went wrong");
-        setPosts([]);
-      }
-    };
-    getPosts();
-  }, [userId, token]);
 
   const postSubmitHandler = async (text) => {
     try {
@@ -56,7 +30,7 @@ const Posts = ({ userId }) => {
         comments: [],
         likes: [],
       };
-      setPosts((prevPosts) => [newPost, ...prevPosts]);
+      onAddPost(newPost);
     } catch (error) {}
   };
 
@@ -67,20 +41,11 @@ const Posts = ({ userId }) => {
           {`${user.username}'s`} posts
         </Card.Header>
         <Card.Body>
-          {parseInt(userId) === authUserId && (
+          {parseInt(user.id) === authUserId && (
             <NewPostForm onSubmitPost={postSubmitHandler} />
           )}
-          {error && (
-            <p
-              className="text-center text-muted mt-5"
-              style={{ fontSize: "2rem" }}
-            >
-              {error}
-            </p>
-          )}
 
-          {!error &&
-            posts &&
+          {posts &&
             posts.map((post) => (
               <Post
                 key={post.id}
