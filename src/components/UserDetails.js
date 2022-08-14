@@ -1,34 +1,32 @@
-import React, { useState } from "react";
+import React from "react";
 import Card from "react-bootstrap/Card";
 import ProfilePicture from "./ProfilePicture";
-import MainModal from "./MainModal";
+import { useDispatch } from "react-redux/es/exports";
+import { modalActions } from "../store/modal-slice";
 import UsersList from "./UsersList";
 
 const UserDetails = ({ user }) => {
-  const [showModal, setShowModal] = useState(false);
-  const [usersListData, setUsersListData] = useState([]);
-  const [modalTitle, setModalTitle] = useState(null);
+  const dispatch = useDispatch();
   const followersClickHandler = () => {
-    setModalTitle(`${user.username}'s followers`);
-    setUsersListData(user.followers);
-    setShowModal(true);
+    let comp = <UsersList users={user.followers} />;
+    dispatch(
+      modalActions.show({
+        title: `${user.username}'s followers`,
+        element: comp,
+      })
+    );
   };
   const followingClickHandler = () => {
-    setModalTitle(`${user.username} following`);
-    setUsersListData(user.following);
-    setShowModal(true);
-  };
-
-  const hideModalHandler = () => {
-    setShowModal(false);
+    dispatch(
+      modalActions.show({
+        title: `${user.username} following`,
+        element: <UsersList users={user.following} />,
+      })
+    );
   };
 
   return (
     <>
-      <MainModal show={showModal} onHide={hideModalHandler} title={modalTitle}>
-        <UsersList users={usersListData} onProfileClick={hideModalHandler} />
-      </MainModal>
-
       <Card className="mt-5 w-75 m-auto">
         <Card.Body className="d-lg-flex m-4">
           <div>
