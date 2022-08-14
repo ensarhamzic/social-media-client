@@ -8,11 +8,10 @@ import UsersList from "./UsersList";
 const UserDetails = ({ user }) => {
   const dispatch = useDispatch();
   const followersClickHandler = () => {
-    let comp = <UsersList users={user.followers} />;
     dispatch(
       modalActions.show({
         title: `${user.username}'s followers`,
-        element: comp,
+        element: <UsersList users={user.followers} />,
       })
     );
   };
