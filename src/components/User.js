@@ -1,10 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import ProfilePicture from "./ProfilePicture";
+import { useDispatch } from "react-redux";
+import { modalActions } from "../store/modal-slice";
 
-const User = ({ user, onProfileClick }) => {
+const User = ({ user }) => {
+  const dispatch = useDispatch();
   const linkClickHandler = () => {
-    onProfileClick();
+    dispatch(modalActions.hide());
   };
   return (
     <Link
