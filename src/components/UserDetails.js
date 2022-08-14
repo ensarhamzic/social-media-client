@@ -2,21 +2,33 @@ import React, { useState } from "react";
 import Card from "react-bootstrap/Card";
 import ProfilePicture from "./ProfilePicture";
 import MainModal from "./MainModal";
+import UsersList from "./UsersList";
 
 const UserDetails = ({ user }) => {
   const [showModal, setShowModal] = useState(false);
+  const [usersListData, setUsersListData] = useState([]);
+  const [modalTitle, setModalTitle] = useState(null);
   const followersClickHandler = () => {
+    setModalTitle(`${user.username}'s followers`);
+    setUsersListData(user.followers);
     setShowModal(true);
   };
   const followingClickHandler = () => {
+    setModalTitle(`${user.username} following`);
+    setUsersListData(user.following);
     setShowModal(true);
+  };
+
+  const hideModalHandler = () => {
+    setShowModal(false);
   };
 
   return (
     <>
-      {showModal && (
-        <MainModal show={showModal} onHide={() => setShowModal(false)} />
-      )}
+      <MainModal show={showModal} onHide={hideModalHandler} title={modalTitle}>
+        <UsersList users={usersListData} onProfileClick={hideModalHandler} />
+      </MainModal>
+
       <Card className="mt-5 w-75 m-auto">
         <Card.Body className="d-lg-flex m-4">
           <div>
