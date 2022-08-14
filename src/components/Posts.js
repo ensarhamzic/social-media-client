@@ -45,7 +45,7 @@ const Posts = ({ posts, user, onAddPost }) => {
             <NewPostForm onSubmitPost={postSubmitHandler} />
           )}
 
-          {posts &&
+          {posts.length > 0 &&
             posts.map((post) => (
               <Post
                 key={post.id}
@@ -57,6 +57,13 @@ const Posts = ({ posts, user, onAddPost }) => {
                 likes={post.likes}
               />
             ))}
+
+          {posts.length === 0 && (
+            <p
+              className="fw-bold"
+              style={{ fontSize: "1.2rem", textAlign: "center" }}
+            >{`${user.username} has no posts!`}</p>
+          )}
         </Card.Body>
       </Card>
     </>
