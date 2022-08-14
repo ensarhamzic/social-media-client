@@ -25,6 +25,12 @@ const Profile = ({ forAuthUser }) => {
             Authorization: `Bearer ${token}`,
           },
         });
+        const following = response.data.following.map((f) => {
+          return { ...f.following };
+        });
+        const followers = response.data.followers.map((f) => {
+          return { ...f.user };
+        });
         setPosts(
           response.data.posts.sort((a, b) => {
             return new Date(b.date) - new Date(a.date);
@@ -37,8 +43,8 @@ const Profile = ({ forAuthUser }) => {
           firstName: response.data.firstName,
           lastName: response.data.lastName,
           pictureUrl: response.data.pictureUrl,
-          followers: response.data.followers,
-          following: response.data.following,
+          followers,
+          following,
         });
         setError(null);
       } catch (error) {
