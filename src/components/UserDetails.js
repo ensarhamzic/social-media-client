@@ -1,40 +1,32 @@
 import React, { useState } from "react";
 import Card from "react-bootstrap/Card";
 import ProfilePicture from "./ProfilePicture";
-import { useDispatch, useSelector } from "react-redux/es/exports";
-import { modalActions } from "../store/modal-slice";
+import { useSelector } from "react-redux/es/exports";
 import UsersList from "./UsersList";
 import MainModal from "./MainModal";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
+import useModal from "../hooks/use-modal";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 const UserDetails = ({ user, onFollowUnfollow }) => {
+  const [modalShowed, showModal, hideModal, title] = useModal();
   const [usersListdata, setUsersListData] = useState([]);
   const authUserId = useSelector((state) => state.auth.user.id);
   const token = useSelector((state) => state.auth.token);
-  const dispatch = useDispatch();
   const followersClickHandler = () => {
     setUsersListData(user.followers);
-    dispatch(
-      modalActions.show({
-        title: `${user.username}'s followers`,
-      })
-    );
+    showModal(`${user.username}'s followers`);
   };
   const followingClickHandler = () => {
     setUsersListData(user.following);
-    dispatch(
-      modalActions.show({
-        title: `${user.username} following`,
-      })
-    );
+    showModal(`${user.username} following`);
   };
 
   const followUnfollowUserHandler = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `${API_URL}/users/${user.id}/follow`,
         {},
         {
@@ -43,7 +35,7 @@ const UserDetails = ({ user, onFollowUnfollow }) => {
           },
         }
       );
-      onFollowUnfollow(response.data);
+      onFollowUnfollow();
     } catch (error) {}
   };
 
@@ -56,7 +48,7 @@ const UserDetails = ({ user, onFollowUnfollow }) => {
   );
   return (
     <>
-      <MainModal>
+      <MainModal show={modalShowed} onHide={hideModal} title={title}>
         <UsersList users={usersListdata} />
       </MainModal>
       <Card className="mt-5 w-75 m-auto">
