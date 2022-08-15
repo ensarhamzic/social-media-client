@@ -9,6 +9,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 const Profile = ({ forAuthUser }) => {
   let userId = useSelector((state) => state.auth.user.id);
+  const authUser = useSelector((state) => state.auth.user);
   let { id: userIdParam } = useParams();
   if (!forAuthUser) userId = userIdParam;
 
@@ -59,6 +60,17 @@ const Profile = ({ forAuthUser }) => {
     setPosts((prevPosts) => [newPost, ...prevPosts]);
   };
 
+  const followUnfollowHandler = (userData) => {
+    const newFollowers = [...user.followers];
+    const foundUserIndex = newFollowers.findIndex((f) => f.id === authUser.id);
+    if (foundUserIndex > -1) {
+      newFollowers.splice(foundUserIndex, 1);
+    } else {
+      newFollowers.push(authUser);
+    }
+    setUser({ ...user, followers: newFollowers });
+  };
+
   return (
     <div>
       {error && (
@@ -66,7 +78,9 @@ const Profile = ({ forAuthUser }) => {
           {error}
         </p>
       )}
-      {!error && user && <UserDetails user={user} />}
+      {!error && user && (
+        <UserDetails user={user} onFollowUnfollow={followUnfollowHandler} />
+      )}
       {!error && user && (
         <Posts user={user} posts={posts} onAddPost={addPostHandler} />
       )}
