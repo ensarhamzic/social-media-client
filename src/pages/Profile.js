@@ -32,8 +32,20 @@ const Profile = ({ forAuthUser }) => {
         const followers = response.data.followers.map((f) => {
           return { ...f.user };
         });
+
+        const formattedPosts = response.data.posts.map((p) => {
+          const newLikes = p.likes.map((l) => {
+            if (!l.user) {
+              // Backend returns empty object if there is currently authenticated user in the likes array
+              return { ...authUser };
+            }
+            return { ...l.user };
+          });
+          return { ...p, likes: newLikes };
+        });
+
         setPosts(
-          response.data.posts.sort((a, b) => {
+          formattedPosts.sort((a, b) => {
             return new Date(b.date) - new Date(a.date);
           })
         );
@@ -54,21 +66,30 @@ const Profile = ({ forAuthUser }) => {
       }
     };
     getPosts();
-  }, [userId, token]);
+  }, [userId, token, authUser]);
 
   const addPostHandler = (newPost) => {
     setPosts((prevPosts) => [newPost, ...prevPosts]);
   };
 
-  const followUnfollowHandler = (userData) => {
+  const followUnfollowHandler = () => {
     const newFollowers = [...user.followers];
     const foundUserIndex = newFollowers.findIndex((f) => f.id === authUser.id);
-    if (foundUserIndex > -1) {
-      newFollowers.splice(foundUserIndex, 1);
-    } else {
-      newFollowers.push(authUser);
-    }
+    if (foundUserIndex > -1) newFollowers.splice(foundUserIndex, 1);
+    else newFollowers.push(authUser);
     setUser({ ...user, followers: newFollowers });
+  };
+
+  const postLikeHandler = (postId) => {
+    const newPost = { ...posts.find((p) => p.id === postId) };
+    const foundUserIndex = newPost.likes.findIndex((l) => l.id === authUser.id);
+    if (foundUserIndex > -1) newPost.likes.splice(foundUserIndex, 1);
+    else newPost.likes.push(authUser);
+    const newPosts = posts.map((p) => {
+      if (p.id === postId) return newPost;
+      return { ...p };
+    });
+    setPosts(newPosts);
   };
 
   return (
@@ -82,7 +103,12 @@ const Profile = ({ forAuthUser }) => {
         <UserDetails user={user} onFollowUnfollow={followUnfollowHandler} />
       )}
       {!error && user && (
-        <Posts user={user} posts={posts} onAddPost={addPostHandler} />
+        <Posts
+          user={user}
+          posts={posts}
+          onAddPost={addPostHandler}
+          onPostLike={postLikeHandler}
+        />
       )}
     </div>
   );
