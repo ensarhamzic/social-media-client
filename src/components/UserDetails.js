@@ -1,31 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import Card from "react-bootstrap/Card";
 import ProfilePicture from "./ProfilePicture";
 import { useDispatch } from "react-redux/es/exports";
 import { modalActions } from "../store/modal-slice";
 import UsersList from "./UsersList";
+import MainModal from "./MainModal";
 
 const UserDetails = ({ user }) => {
+  const [userData, setUserData] = useState([]);
   const dispatch = useDispatch();
   const followersClickHandler = () => {
+    setUserData(user.followers);
     dispatch(
       modalActions.show({
         title: `${user.username}'s followers`,
-        element: <UsersList users={user.followers} />,
       })
     );
   };
   const followingClickHandler = () => {
+    setUserData(user.following);
     dispatch(
       modalActions.show({
         title: `${user.username} following`,
-        element: <UsersList users={user.following} />,
       })
     );
   };
 
   return (
     <>
+      <MainModal>
+        <UsersList users={userData} />
+      </MainModal>
       <Card className="mt-5 w-75 m-auto">
         <Card.Body className="d-lg-flex m-4">
           <div>
