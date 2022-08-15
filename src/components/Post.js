@@ -3,25 +3,73 @@ import Card from "react-bootstrap/Card";
 import { Link } from "react-router-dom";
 import { AiFillLike } from "react-icons/ai";
 import { FaComment } from "react-icons/fa";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import MainModal from "./MainModal";
+import UsersList from "./UsersList";
+import useModal from "../hooks/use-modal";
 
-const Post = ({ id, text, userId, username, comments, likes }) => {
+const API_URL = process.env.REACT_APP_API_URL;
+
+const Post = ({ id, text, userId, username, comments, likes, onPostLike }) => {
+  const [modalShowed, showModal, hideModal, title] = useModal();
+  const token = useSelector((state) => state.auth.token);
+  const authUserId = useSelector((state) => state.auth.user.id);
+  const likeUnlikePostHandler = async () => {
+    try {
+      await axios.post(
+        `${API_URL}/posts/${id}/likes`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      onPostLike(id);
+    } catch (error) {}
+  };
+
+  const userLiked = likes.some((l) => l.id === authUserId);
+
+  const likesClickHandler = () => {
+    showModal("Post likes");
+  };
+
   return (
-    <Card className="mt-2">
-      <Card.Body>
-        <p className="fw-bold">
-          <Link to={`/profile/${userId}`}>{username}</Link>
-        </p>
-        <p style={{ fontSize: "1.3rem" }}>{text}</p>
-        <div className="d-flex w-100 fw-bold" style={{ fontSize: "1.3rem" }}>
-          <div>
-            {likes.length} <AiFillLike />
+    <>
+      <MainModal show={modalShowed} onHide={hideModal} title={title}>
+        <UsersList users={likes} />
+      </MainModal>
+      <Card className="mt-2">
+        <Card.Body>
+          <p className="fw-bold">
+            <Link to={`/profile/${userId}`}>{username}</Link>
+          </p>
+          <p style={{ fontSize: "1.3rem" }}>{text}</p>
+          <div className="d-flex w-100 fw-bold" style={{ fontSize: "1.3rem" }}>
+            <div>
+              <span onClick={likesClickHandler} style={{ cursor: "pointer" }}>
+                {likes.length}{" "}
+              </span>
+              <span
+                onClick={likeUnlikePostHandler}
+                style={{ cursor: "pointer" }}
+                className={`${userLiked ? "text-primary" : ""}`}
+              >
+                <AiFillLike />
+              </span>
+            </div>
+            <div style={{ marginLeft: "25px", cursor: "pointer" }}>
+              <span>{comments.length} </span>
+              <span>
+                <FaComment />
+              </span>
+            </div>
           </div>
-          <div style={{ marginLeft: "25px" }}>
-            {comments.length} <FaComment />
-          </div>
-        </div>
-      </Card.Body>
-    </Card>
+        </Card.Body>
+      </Card>
+    </>
   );
 };
 
