@@ -10,16 +10,11 @@ import Register from "./pages/Register";
 import { useEffect } from "react";
 import axios from "axios";
 import { authActions } from "./store/auth-slice";
-import { modalActions } from "./store/modal-slice";
-import MainModal from "./components/MainModal";
-import ReactDOM from "react-dom";
-
 const API_URL = process.env.REACT_APP_API_URL;
 
 function App() {
   const dispatch = useDispatch();
   const isAuth = useSelector((state) => state.auth.isAuth);
-  const modal = useSelector((state) => state.modal);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -45,21 +40,8 @@ function App() {
     }
   }, [dispatch]);
 
-  const modalHideHandler = () => {
-    dispatch(modalActions.hide());
-  };
   return (
     <>
-      {ReactDOM.createPortal(
-        <MainModal
-          show={modal.show}
-          onHide={modalHideHandler}
-          title={modal.title}
-        >
-          {modal.element}
-        </MainModal>,
-        document.getElementById("modal")
-      )}
       <MainNavbar />
       <Container>
         <Routes>
