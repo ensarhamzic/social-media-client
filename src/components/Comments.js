@@ -9,7 +9,7 @@ const Comments = ({ comments, onCommentSubmit }) => {
   return (
     <>
       <NewCommentForm onCommentSubmit={commentSubmitHandler} />
-      <CommentsList comment={comments} />
+      <CommentsList comments={comments} />
     </>
   )
 }
