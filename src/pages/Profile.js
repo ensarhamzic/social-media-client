@@ -63,10 +63,8 @@ const Profile = ({ forAuthUser }) => {
             if (!c.user) {
               // Backend returns empty object if there is currently authenticated user in the likes array
               return {
-                comment: {
-                  id: c.id,
-                  text: c.text,
-                },
+                id: c.id,
+                text: c.text,
                 user: {
                   id: profileUser.id,
                   username: profileUser.username,
@@ -78,10 +76,8 @@ const Profile = ({ forAuthUser }) => {
               }
             } else {
               return {
-                comment: {
-                  id: c.id,
-                  text: c.text,
-                },
+                id: c.id,
+                text: c.text,
                 user: {
                   ...c.user,
                 },
