@@ -59,7 +59,36 @@ const Profile = ({ forAuthUser }) => {
             }
             return { ...l.user }
           })
-          return { ...p, likes: newLikes }
+          const newComments = p.comments.map((c) => {
+            if (!c.user) {
+              // Backend returns empty object if there is currently authenticated user in the likes array
+              return {
+                comment: {
+                  id: c.id,
+                  text: c.text,
+                },
+                user: {
+                  id: profileUser.id,
+                  username: profileUser.username,
+                  email: profileUser.email,
+                  firstName: profileUser.firstName,
+                  lastName: profileUser.lastName,
+                  pictureUrl: profileUser.pictureUrl,
+                },
+              }
+            } else {
+              return {
+                comment: {
+                  id: c.id,
+                  text: c.text,
+                },
+                user: {
+                  ...c.user,
+                },
+              }
+            }
+          })
+          return { ...p, likes: newLikes, comments: newComments }
         })
 
         setPosts(
@@ -105,6 +134,23 @@ const Profile = ({ forAuthUser }) => {
     setPosts((prevPosts) => prevPosts.filter((p) => p.id !== postId))
   }
 
+  const commentSubmitHandler = async (postId, commentText) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/posts/${postId}/comments`,
+        {
+          text: commentText,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      console.log(response.data)
+    } catch (error) {}
+  }
+
   return (
     <div>
       {error && (
@@ -122,6 +168,7 @@ const Profile = ({ forAuthUser }) => {
           onAddPost={addPostHandler}
           onPostLike={postLikeHandler}
           onPostDelete={postDeleteHandler}
+          onSubmitComment={commentSubmitHandler}
         />
       )}
     </div>
