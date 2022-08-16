@@ -24,7 +24,6 @@ const Post = ({
   onPostDelete,
   onCommentSubmit,
 }) => {
-  console.log(comments)
   const [modalShowed, showModal, hideModal, title] = useModal()
   const token = useSelector((state) => state.auth.token)
   const authUserId = useSelector((state) => state.auth.user.id)
