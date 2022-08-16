@@ -7,7 +7,7 @@ import NewPostForm from "./NewPostForm";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-const Posts = ({ posts, user, onAddPost, onPostLike }) => {
+const Posts = ({ posts, user, onAddPost, onPostLike, onPostDelete }) => {
   const token = useSelector((state) => state.auth.token);
   const authUserId = useSelector((state) => state.auth.user.id);
 
@@ -31,6 +31,17 @@ const Posts = ({ posts, user, onAddPost, onPostLike }) => {
         likes: [],
       };
       onAddPost(newPost);
+    } catch (error) {}
+  };
+
+  const postDeleteHandler = async (postId) => {
+    try {
+      await axios.delete(`${API_URL}/posts/${postId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      onPostDelete(postId);
     } catch (error) {}
   };
 
@@ -60,6 +71,7 @@ const Posts = ({ posts, user, onAddPost, onPostLike }) => {
                 comments={post.comments}
                 likes={post.likes}
                 onPostLike={postLikeHandler}
+                onPostDelete={postDeleteHandler}
               />
             ))}
 

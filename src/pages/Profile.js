@@ -92,6 +92,10 @@ const Profile = ({ forAuthUser }) => {
     setPosts(newPosts);
   };
 
+  const postDeleteHandler = (postId) => {
+    setPosts((prevPosts) => prevPosts.filter((p) => p.id !== postId));
+  };
+
   return (
     <div>
       {error && (
@@ -108,6 +112,7 @@ const Profile = ({ forAuthUser }) => {
           posts={posts}
           onAddPost={addPostHandler}
           onPostLike={postLikeHandler}
+          onPostDelete={postDeleteHandler}
         />
       )}
     </div>

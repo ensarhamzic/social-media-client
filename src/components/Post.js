@@ -8,10 +8,20 @@ import { useSelector } from "react-redux";
 import MainModal from "./MainModal";
 import UsersList from "./UsersList";
 import useModal from "../hooks/use-modal";
+import Button from "react-bootstrap/Button";
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-const Post = ({ id, text, userId, username, comments, likes, onPostLike }) => {
+const Post = ({
+  id,
+  text,
+  userId,
+  username,
+  comments,
+  likes,
+  onPostLike,
+  onPostDelete,
+}) => {
   const [modalShowed, showModal, hideModal, title] = useModal();
   const token = useSelector((state) => state.auth.token);
   const authUserId = useSelector((state) => state.auth.user.id);
@@ -30,10 +40,17 @@ const Post = ({ id, text, userId, username, comments, likes, onPostLike }) => {
     } catch (error) {}
   };
 
-  const userLiked = likes.some((l) => l.id === authUserId);
+  const userLiked = likes.some((l) => {
+    console.log(id, l.id, authUserId);
+    return l.id === authUserId;
+  });
 
   const likesClickHandler = () => {
     showModal("Post likes");
+  };
+
+  const deletePostHandler = () => {
+    onPostDelete(id);
   };
 
   return (
@@ -43,9 +60,16 @@ const Post = ({ id, text, userId, username, comments, likes, onPostLike }) => {
       </MainModal>
       <Card className="mt-2">
         <Card.Body>
-          <p className="fw-bold">
-            <Link to={`/profile/${userId}`}>{username}</Link>
-          </p>
+          <div className="d-flex justify-content-between">
+            <p className="fw-bold">
+              <Link to={`/profile/${userId}`}>{username}</Link>
+            </p>
+            {userId === authUserId && (
+              <Button variant="danger" size="sm" onClick={deletePostHandler}>
+                Delete
+              </Button>
+            )}
+          </div>
           <p style={{ fontSize: "1.3rem" }}>{text}</p>
           <div className="d-flex w-100 fw-bold" style={{ fontSize: "1.3rem" }}>
             <div>
