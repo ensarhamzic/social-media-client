@@ -167,6 +167,23 @@ const Profile = ({ forAuthUser }) => {
     } catch (error) {}
   }
 
+  const commentDeleteHandler = async (postId, commentId) => {
+    try {
+      await axios.delete(`${API_URL}/posts/${postId}/comments/${commentId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      const newPost = { ...posts.find((p) => p.id === postId) }
+      newPost.comments = newPost.comments.filter((c) => c.id !== commentId)
+      const newPosts = posts.map((p) => {
+        if (p.id === postId) return newPost
+        return { ...p }
+      })
+      setPosts(newPosts)
+    } catch (error) {}
+  }
+
   return (
     <div>
       {error && (
@@ -185,6 +202,7 @@ const Profile = ({ forAuthUser }) => {
           onPostLike={postLikeHandler}
           onPostDelete={postDeleteHandler}
           onSubmitComment={commentSubmitHandler}
+          onCommentDelete={commentDeleteHandler}
         />
       )}
     </div>

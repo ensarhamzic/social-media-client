@@ -23,6 +23,7 @@ const Post = ({
   onPostLike,
   onPostDelete,
   onCommentSubmit,
+  onCommentDelete,
 }) => {
   const [modalShowed, showModal, hideModal, title] = useModal()
   const token = useSelector((state) => state.auth.token)
@@ -60,6 +61,10 @@ const Post = ({
 
   const commentSubmitHandler = (commentText) => {
     onCommentSubmit(id, commentText)
+  }
+
+  const commentDeleteHandler = (commentId) => {
+    onCommentDelete(id, commentId)
   }
 
   return (
@@ -107,6 +112,7 @@ const Post = ({
             <Comments
               comments={comments}
               onCommentSubmit={commentSubmitHandler}
+              onCommentDelete={commentDeleteHandler}
             />
           )}
         </Card.Body>

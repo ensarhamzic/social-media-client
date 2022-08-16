@@ -14,6 +14,7 @@ const Posts = ({
   onPostLike,
   onPostDelete,
   onSubmitComment,
+  onCommentDelete,
 }) => {
   const token = useSelector((state) => state.auth.token)
   const authUserId = useSelector((state) => state.auth.user.id)
@@ -60,6 +61,10 @@ const Posts = ({
     onSubmitComment(postId, commentText)
   }
 
+  const commentDeleteHandler = (postId, commentId) => {
+    onCommentDelete(postId, commentId)
+  }
+
   return (
     <>
       <Card className="mt-5 w-50 m-auto">
@@ -84,6 +89,7 @@ const Posts = ({
                 onPostLike={postLikeHandler}
                 onPostDelete={postDeleteHandler}
                 onCommentSubmit={commentSubmitHandler}
+                onCommentDelete={commentDeleteHandler}
               />
             ))}
 
