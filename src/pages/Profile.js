@@ -33,11 +33,29 @@ const Profile = ({ forAuthUser }) => {
           return { ...f.user };
         });
 
+        const profileUser = {
+          id: response.data.id,
+          username: response.data.username,
+          email: response.data.email,
+          firstName: response.data.firstName,
+          lastName: response.data.lastName,
+          pictureUrl: response.data.pictureUrl,
+          followers,
+          following,
+        };
+
         const formattedPosts = response.data.posts.map((p) => {
           const newLikes = p.likes.map((l) => {
             if (!l.user) {
               // Backend returns empty object if there is currently authenticated user in the likes array
-              return { ...authUser };
+              return {
+                id: profileUser.id,
+                username: profileUser.username,
+                email: profileUser.email,
+                firstName: profileUser.firstName,
+                lastName: profileUser.lastName,
+                pictureUrl: profileUser.pictureUrl,
+              };
             }
             return { ...l.user };
           });
@@ -49,16 +67,7 @@ const Profile = ({ forAuthUser }) => {
             return new Date(b.date) - new Date(a.date);
           })
         );
-        setUser({
-          id: response.data.id,
-          username: response.data.username,
-          email: response.data.email,
-          firstName: response.data.firstName,
-          lastName: response.data.lastName,
-          pictureUrl: response.data.pictureUrl,
-          followers,
-          following,
-        });
+        setUser(profileUser);
         setError(null);
       } catch (error) {
         setError("Something went wrong");
