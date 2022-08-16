@@ -47,7 +47,7 @@ const Profile = ({ forAuthUser }) => {
         const formattedPosts = response.data.posts.map((p) => {
           const newLikes = p.likes.map((l) => {
             if (!l.user) {
-              // Backend returns empty object if there is currently authenticated user in the likes array
+              // Backend returns empty object if there is current user's profile user in the likes array
               return {
                 id: profileUser.id,
                 username: profileUser.username,
@@ -59,12 +59,16 @@ const Profile = ({ forAuthUser }) => {
             }
             return { ...l.user }
           })
-          const newComments = p.comments.map((c) => {
+          let newComments = p.comments.map((c) => {
+            const comment = {
+              id: c.id,
+              text: c.text,
+              date: c.date,
+            }
             if (!c.user) {
-              // Backend returns empty object if there is currently authenticated user in the likes array
+              // Backend returns empty object if there is current user's profile user in the comments array
               return {
-                id: c.id,
-                text: c.text,
+                ...comment,
                 user: {
                   id: profileUser.id,
                   username: profileUser.username,
@@ -76,13 +80,15 @@ const Profile = ({ forAuthUser }) => {
               }
             } else {
               return {
-                id: c.id,
-                text: c.text,
+                ...comment,
                 user: {
                   ...c.user,
                 },
               }
             }
+          })
+          newComments = newComments.sort((a, b) => {
+            return new Date(b.date) - new Date(a.date)
           })
           return { ...p, likes: newLikes, comments: newComments }
         })
@@ -143,7 +149,21 @@ const Profile = ({ forAuthUser }) => {
           },
         }
       )
-      console.log(response.data)
+      const newComment = {
+        id: response.data.id,
+        text: response.data.text,
+        user: {
+          ...authUser,
+        },
+      }
+
+      const newPost = { ...posts.find((p) => p.id === postId) }
+      newPost.comments.unshift(newComment)
+      const newPosts = posts.map((p) => {
+        if (p.id === postId) return newPost
+        return { ...p }
+      })
+      setPosts(newPosts)
     } catch (error) {}
   }
 
