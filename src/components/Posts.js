@@ -7,7 +7,14 @@ import NewPostForm from "./NewPostForm"
 
 const API_URL = process.env.REACT_APP_API_URL
 
-const Posts = ({ posts, user, onAddPost, onPostLike, onPostDelete }) => {
+const Posts = ({
+  posts,
+  user,
+  onAddPost,
+  onPostLike,
+  onPostDelete,
+  onSubmitComment,
+}) => {
   const token = useSelector((state) => state.auth.token)
   const authUserId = useSelector((state) => state.auth.user.id)
 
@@ -49,6 +56,10 @@ const Posts = ({ posts, user, onAddPost, onPostLike, onPostDelete }) => {
     onPostLike(postId)
   }
 
+  const commentSubmitHandler = (postId, commentText) => {
+    onSubmitComment(postId, commentText)
+  }
+
   return (
     <>
       <Card className="mt-5 w-50 m-auto">
@@ -72,6 +83,7 @@ const Posts = ({ posts, user, onAddPost, onPostLike, onPostDelete }) => {
                 likes={post.likes}
                 onPostLike={postLikeHandler}
                 onPostDelete={postDeleteHandler}
+                onCommentSubmit={commentSubmitHandler}
               />
             ))}
 

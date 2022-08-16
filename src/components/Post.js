@@ -9,6 +9,7 @@ import MainModal from "./MainModal"
 import UsersList from "./UsersList"
 import useModal from "../hooks/use-modal"
 import Button from "react-bootstrap/Button"
+import Comments from "./Comments"
 
 const API_URL = process.env.REACT_APP_API_URL
 
@@ -21,7 +22,9 @@ const Post = ({
   likes,
   onPostLike,
   onPostDelete,
+  onCommentSubmit,
 }) => {
+  console.log(comments)
   const [modalShowed, showModal, hideModal, title] = useModal()
   const token = useSelector((state) => state.auth.token)
   const authUserId = useSelector((state) => state.auth.user.id)
@@ -54,6 +57,10 @@ const Post = ({
 
   const commentsClickHandler = () => {
     setCommentsVisible((prevState) => !prevState)
+  }
+
+  const commentSubmitHandler = (commentText) => {
+    onCommentSubmit(id, commentText)
   }
 
   return (
@@ -97,7 +104,12 @@ const Post = ({
               </span>
             </div>
           </div>
-          {commmentsVisible && <p>Comments</p>}
+          {commmentsVisible && (
+            <Comments
+              comments={comments}
+              onCommentSubmit={commentSubmitHandler}
+            />
+          )}
         </Card.Body>
       </Card>
     </>
