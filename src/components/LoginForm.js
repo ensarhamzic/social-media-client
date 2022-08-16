@@ -1,39 +1,39 @@
-import React, { useRef, useState, useEffect } from "react";
-import { Button } from "react-bootstrap";
-import { Form } from "react-bootstrap";
+import React, { useRef, useState, useEffect } from "react"
+import { Button } from "react-bootstrap"
+import { Form } from "react-bootstrap"
 
 const LoginForm = ({ onFormSubmit, loginError }) => {
-  const [usernameError, setUsernameError] = useState(null);
-  const [passwordError, setPasswordError] = useState(null);
-  const formValid = !usernameError && !passwordError;
-  const [formSubmitted, setFormSubmitted] = useState(false);
-  const usernameInputRef = useRef();
-  const passwordInputRef = useRef();
+  const [usernameError, setUsernameError] = useState(null)
+  const [passwordError, setPasswordError] = useState(null)
+  const formValid = !usernameError && !passwordError
+  const [formSubmitted, setFormSubmitted] = useState(false)
+  const usernameInputRef = useRef()
+  const passwordInputRef = useRef()
 
   const formSubmitHandler = (event) => {
-    event.preventDefault();
-    const username = usernameInputRef.current.value;
-    const password = passwordInputRef.current.value;
-    if (username.trim() === "") setUsernameError("Must not be empty");
-    else setUsernameError(null);
+    event.preventDefault()
+    const username = usernameInputRef.current.value
+    const password = passwordInputRef.current.value
+    if (username.trim() === "") setUsernameError("Must not be empty")
+    else setUsernameError(null)
 
     if (password.length < 8)
-      setPasswordError("Must be at least 8 characters long");
-    else setPasswordError(null);
+      setPasswordError("Must be at least 8 characters long")
+    else setPasswordError(null)
 
-    setFormSubmitted(true);
-  };
+    setFormSubmitted(true)
+  }
 
   useEffect(() => {
     if (formValid && formSubmitted) {
       const userData = {
         username: usernameInputRef.current.value,
         password: passwordInputRef.current.value,
-      };
-      onFormSubmit(userData);
-      setFormSubmitted(false);
+      }
+      onFormSubmit(userData)
+      setFormSubmitted(false)
     }
-  }, [formValid, formSubmitted, onFormSubmit]);
+  }, [formValid, formSubmitted, onFormSubmit])
 
   return (
     <Form onSubmit={formSubmitHandler}>
@@ -60,7 +60,7 @@ const LoginForm = ({ onFormSubmit, loginError }) => {
         Login
       </Button>
     </Form>
-  );
-};
+  )
+}
 
-export default LoginForm;
+export default LoginForm

@@ -1,19 +1,19 @@
-import React from "react";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import { LinkContainer } from "react-router-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
-import { Button } from "react-bootstrap";
-import { authActions } from "../store/auth-slice";
+import React from "react"
+import Container from "react-bootstrap/Container"
+import Nav from "react-bootstrap/Nav"
+import Navbar from "react-bootstrap/Navbar"
+import { LinkContainer } from "react-router-bootstrap"
+import { useDispatch, useSelector } from "react-redux"
+import { Button } from "react-bootstrap"
+import { authActions } from "../store/auth-slice"
 
 const MainNavbar = () => {
-  const isAuth = useSelector((state) => state.auth.isAuth);
-  const dispatch = useDispatch();
+  const isAuth = useSelector((state) => state.auth.isAuth)
+  const dispatch = useDispatch()
 
   const logoutHandler = () => {
-    dispatch(authActions.logout());
-  };
+    dispatch(authActions.logout())
+  }
 
   let navLinks = (
     <>
@@ -24,7 +24,7 @@ const MainNavbar = () => {
         <Nav.Link>Register</Nav.Link>
       </LinkContainer>
     </>
-  );
+  )
 
   if (isAuth) {
     navLinks = (
@@ -39,7 +39,7 @@ const MainNavbar = () => {
           Logout
         </Button>
       </>
-    );
+    )
   }
   return (
     <Navbar bg="light" expand="lg">
@@ -55,7 +55,7 @@ const MainNavbar = () => {
         </Navbar.Collapse>
       </Container>
     </Navbar>
-  );
-};
+  )
+}
 
-export default MainNavbar;
+export default MainNavbar

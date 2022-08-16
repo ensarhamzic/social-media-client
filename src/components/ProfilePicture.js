@@ -1,5 +1,5 @@
-import React from "react";
-import DefaultProfilePicture from "../images/default_profile_picture.jpg";
+import React from "react"
+import DefaultProfilePicture from "../images/default_profile_picture.jpg"
 
 const ProfilePicture = ({ pictureUrl, width }) => {
   return (
@@ -8,7 +8,7 @@ const ProfilePicture = ({ pictureUrl, width }) => {
       src={pictureUrl ?? DefaultProfilePicture}
       alt="profile"
     />
-  );
-};
+  )
+}
 
-export default ProfilePicture;
+export default ProfilePicture

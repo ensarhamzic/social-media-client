@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
   token: null,
@@ -11,17 +11,17 @@ const initialState = {
     email: null,
     pictureUrl: null,
   },
-};
+}
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
     login: (state, action) => {
-      state.token = action.payload.token;
-      state.isAuth = true;
+      state.token = action.payload.token
+      state.isAuth = true
       const { id, firstName, lastName, username, email, pictureUrl } =
-        action.payload.user;
+        action.payload.user
       state.user = {
         id,
         firstName,
@@ -29,17 +29,17 @@ const authSlice = createSlice({
         username,
         email,
         pictureUrl,
-      };
-      localStorage.setItem("token", action.payload.token);
+      }
+      localStorage.setItem("token", action.payload.token)
     },
     logout: (state, action) => {
-      state.token = initialState.token;
-      state.isAuth = initialState.isAuth;
-      state.user = { ...initialState.user };
-      localStorage.removeItem("token");
+      state.token = initialState.token
+      state.isAuth = initialState.isAuth
+      state.user = { ...initialState.user }
+      localStorage.removeItem("token")
     },
   },
-});
+})
 
-export const authActions = authSlice.actions;
-export default authSlice.reducer;
+export const authActions = authSlice.actions
+export default authSlice.reducer

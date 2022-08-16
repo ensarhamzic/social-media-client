@@ -1,5 +1,5 @@
-import React from "react";
-import User from "./User";
+import React from "react"
+import User from "./User"
 
 const UsersList = ({ users }) => {
   return (
@@ -17,7 +17,7 @@ const UsersList = ({ users }) => {
         </p>
       )}
     </>
-  );
-};
+  )
+}
 
-export default UsersList;
+export default UsersList

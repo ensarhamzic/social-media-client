@@ -1,28 +1,28 @@
-import React, { useState } from "react";
-import Card from "react-bootstrap/Card";
-import ProfilePicture from "./ProfilePicture";
-import { useSelector } from "react-redux/es/exports";
-import UsersList from "./UsersList";
-import MainModal from "./MainModal";
-import Button from "react-bootstrap/Button";
-import axios from "axios";
-import useModal from "../hooks/use-modal";
+import React, { useState } from "react"
+import Card from "react-bootstrap/Card"
+import ProfilePicture from "./ProfilePicture"
+import { useSelector } from "react-redux/es/exports"
+import UsersList from "./UsersList"
+import MainModal from "./MainModal"
+import Button from "react-bootstrap/Button"
+import axios from "axios"
+import useModal from "../hooks/use-modal"
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL
 
 const UserDetails = ({ user, onFollowUnfollow }) => {
-  const [modalShowed, showModal, hideModal, title] = useModal();
-  const [usersListdata, setUsersListData] = useState([]);
-  const authUserId = useSelector((state) => state.auth.user.id);
-  const token = useSelector((state) => state.auth.token);
+  const [modalShowed, showModal, hideModal, title] = useModal()
+  const [usersListdata, setUsersListData] = useState([])
+  const authUserId = useSelector((state) => state.auth.user.id)
+  const token = useSelector((state) => state.auth.token)
   const followersClickHandler = () => {
-    setUsersListData(user.followers);
-    showModal(`${user.username}'s followers`);
-  };
+    setUsersListData(user.followers)
+    showModal(`${user.username}'s followers`)
+  }
   const followingClickHandler = () => {
-    setUsersListData(user.following);
-    showModal(`${user.username} following`);
-  };
+    setUsersListData(user.following)
+    showModal(`${user.username} following`)
+  }
 
   const followUnfollowUserHandler = async () => {
     try {
@@ -34,18 +34,18 @@ const UserDetails = ({ user, onFollowUnfollow }) => {
             Authorization: `Bearer ${token}`,
           },
         }
-      );
-      onFollowUnfollow();
+      )
+      onFollowUnfollow()
     } catch (error) {}
-  };
+  }
 
-  const isUserFollowing = user.followers.some((f) => f.id === authUserId);
+  const isUserFollowing = user.followers.some((f) => f.id === authUserId)
   const followButton = (
     <Button
       onClick={followUnfollowUserHandler}
       variant={`${isUserFollowing ? "light" : "primary"}`}
     >{`${isUserFollowing ? "Unfollow" : "Follow"}`}</Button>
-  );
+  )
   return (
     <>
       <MainModal show={modalShowed} onHide={hideModal} title={title}>
@@ -89,7 +89,7 @@ const UserDetails = ({ user, onFollowUnfollow }) => {
         </Card.Body>
       </Card>
     </>
-  );
-};
+  )
+}
 
-export default UserDetails;
+export default UserDetails

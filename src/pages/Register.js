@@ -1,26 +1,26 @@
-import Card from "react-bootstrap/Card";
-import RegisterForm from "../components/RegisterForm";
-import axios from "axios";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { authActions } from "../store/auth-slice";
-import { LinkContainer } from "react-router-bootstrap";
+import Card from "react-bootstrap/Card"
+import RegisterForm from "../components/RegisterForm"
+import axios from "axios"
+import { useState } from "react"
+import { useDispatch } from "react-redux"
+import { authActions } from "../store/auth-slice"
+import { LinkContainer } from "react-router-bootstrap"
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL
 
 const Register = () => {
-  const dispatch = useDispatch();
-  const [registerError, setRegisterError] = useState(null);
+  const dispatch = useDispatch()
+  const [registerError, setRegisterError] = useState(null)
   const registerUserHandler = async (user) => {
     try {
-      const response = await axios.post(`${API_URL}/users/register`, user);
-      const { token, user: newUserData } = response.data;
-      setRegisterError(null);
-      dispatch(authActions.login({ token, user: newUserData }));
+      const response = await axios.post(`${API_URL}/users/register`, user)
+      const { token, user: newUserData } = response.data
+      setRegisterError(null)
+      dispatch(authActions.login({ token, user: newUserData }))
     } catch (error) {
-      setRegisterError(error.response.data.message);
+      setRegisterError(error.response.data.message)
     }
-  };
+  }
   return (
     <Card className="mt-5 m-auto" style={{ width: "40%" }}>
       <Card.Body>
@@ -34,7 +34,7 @@ const Register = () => {
         </LinkContainer>
       </Card.Body>
     </Card>
-  );
-};
+  )
+}
 
-export default Register;
+export default Register

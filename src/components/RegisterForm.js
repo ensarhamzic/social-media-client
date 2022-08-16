@@ -1,53 +1,52 @@
-import React, { useRef, useState, useEffect } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
+import React, { useRef, useState, useEffect } from "react"
+import Button from "react-bootstrap/Button"
+import Form from "react-bootstrap/Form"
 
 const RegisterForm = ({ onFormSubmit, registerError }) => {
-  const [firstNameError, setFirstNameError] = useState(null);
-  const [lastNameError, setLastNameError] = useState(null);
-  const [emailError, setEmailError] = useState(null);
-  const [usernameError, setUsernameError] = useState(null);
-  const [passwordError, setPasswordError] = useState(null);
-  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [firstNameError, setFirstNameError] = useState(null)
+  const [lastNameError, setLastNameError] = useState(null)
+  const [emailError, setEmailError] = useState(null)
+  const [usernameError, setUsernameError] = useState(null)
+  const [passwordError, setPasswordError] = useState(null)
+  const [formSubmitted, setFormSubmitted] = useState(false)
   const formValid =
     !firstNameError &&
     !lastNameError &&
     !emailError &&
     !usernameError &&
-    !passwordError;
-  const firstNameInputRef = useRef();
-  const lastNameInputRef = useRef();
-  const emailInputRef = useRef();
-  const usernameInputRef = useRef();
-  const passwordInputRef = useRef();
-  const confirmPasswordInputRef = useRef();
+    !passwordError
+  const firstNameInputRef = useRef()
+  const lastNameInputRef = useRef()
+  const emailInputRef = useRef()
+  const usernameInputRef = useRef()
+  const passwordInputRef = useRef()
+  const confirmPasswordInputRef = useRef()
 
   const validateUserData = (userData) => {
-    if (userData.firstName.trim() === "")
-      setFirstNameError("Must not be empty");
-    else setFirstNameError(null);
+    if (userData.firstName.trim() === "") setFirstNameError("Must not be empty")
+    else setFirstNameError(null)
 
-    if (userData.lastName.trim() === "") setLastNameError("Must not be empty");
-    else setLastNameError(null);
+    if (userData.lastName.trim() === "") setLastNameError("Must not be empty")
+    else setLastNameError(null)
 
     const emailReg =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     if (!userData.email.toLowerCase().match(emailReg))
-      setEmailError("Must be in format of example@company.com");
-    else setEmailError(null);
+      setEmailError("Must be in format of example@company.com")
+    else setEmailError(null)
 
-    if (userData.username.trim() === "") setUsernameError("Must not be empty");
-    else setUsernameError(null);
+    if (userData.username.trim() === "") setUsernameError("Must not be empty")
+    else setUsernameError(null)
 
     if (userData.password.length < 8)
-      setPasswordError("Must be at least 8 characters long");
+      setPasswordError("Must be at least 8 characters long")
     else if (userData.password !== userData.confirmPassword)
-      setPasswordError("Passwords do not match");
-    else setPasswordError(null);
-  };
+      setPasswordError("Passwords do not match")
+    else setPasswordError(null)
+  }
 
   const formSubmitHandler = (event) => {
-    event.preventDefault();
+    event.preventDefault()
     const userData = {
       firstName: firstNameInputRef.current.value,
       lastName: lastNameInputRef.current.value,
@@ -55,11 +54,11 @@ const RegisterForm = ({ onFormSubmit, registerError }) => {
       username: usernameInputRef.current.value,
       password: passwordInputRef.current.value,
       confirmPassword: confirmPasswordInputRef.current.value,
-    };
+    }
 
-    validateUserData(userData);
-    setFormSubmitted(true);
-  };
+    validateUserData(userData)
+    setFormSubmitted(true)
+  }
 
   useEffect(() => {
     if (formValid && formSubmitted) {
@@ -70,11 +69,11 @@ const RegisterForm = ({ onFormSubmit, registerError }) => {
         username: usernameInputRef.current.value,
         password: passwordInputRef.current.value,
         confirmPassword: confirmPasswordInputRef.current.value,
-      };
-      onFormSubmit(userData);
-      setFormSubmitted(false);
+      }
+      onFormSubmit(userData)
+      setFormSubmitted(false)
     }
-  }, [formValid, formSubmitted, onFormSubmit]);
+  }, [formValid, formSubmitted, onFormSubmit])
 
   return (
     <Form onSubmit={formSubmitHandler}>
@@ -136,7 +135,7 @@ const RegisterForm = ({ onFormSubmit, registerError }) => {
         Register
       </Button>
     </Form>
-  );
-};
+  )
+}
 
-export default RegisterForm;
+export default RegisterForm

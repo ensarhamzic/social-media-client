@@ -1,15 +1,15 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import axios from "axios";
-import Card from "react-bootstrap/Card";
-import Post from "./Post";
-import NewPostForm from "./NewPostForm";
+import React from "react"
+import { useSelector } from "react-redux"
+import axios from "axios"
+import Card from "react-bootstrap/Card"
+import Post from "./Post"
+import NewPostForm from "./NewPostForm"
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL
 
 const Posts = ({ posts, user, onAddPost, onPostLike, onPostDelete }) => {
-  const token = useSelector((state) => state.auth.token);
-  const authUserId = useSelector((state) => state.auth.user.id);
+  const token = useSelector((state) => state.auth.token)
+  const authUserId = useSelector((state) => state.auth.user.id)
 
   const postSubmitHandler = async (text) => {
     try {
@@ -21,7 +21,7 @@ const Posts = ({ posts, user, onAddPost, onPostLike, onPostDelete }) => {
             Authorization: `Bearer ${token}`,
           },
         }
-      );
+      )
       const newPost = {
         id: response.data.id,
         text: response.data.text,
@@ -29,10 +29,10 @@ const Posts = ({ posts, user, onAddPost, onPostLike, onPostDelete }) => {
         username: user.username,
         comments: [],
         likes: [],
-      };
-      onAddPost(newPost);
+      }
+      onAddPost(newPost)
     } catch (error) {}
-  };
+  }
 
   const postDeleteHandler = async (postId) => {
     try {
@@ -40,14 +40,14 @@ const Posts = ({ posts, user, onAddPost, onPostLike, onPostDelete }) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      });
-      onPostDelete(postId);
+      })
+      onPostDelete(postId)
     } catch (error) {}
-  };
+  }
 
   const postLikeHandler = (postId) => {
-    onPostLike(postId);
-  };
+    onPostLike(postId)
+  }
 
   return (
     <>
@@ -84,7 +84,7 @@ const Posts = ({ posts, user, onAddPost, onPostLike, onPostDelete }) => {
         </Card.Body>
       </Card>
     </>
-  );
-};
+  )
+}
 
-export default Posts;
+export default Posts

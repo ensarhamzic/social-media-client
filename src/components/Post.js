@@ -1,16 +1,16 @@
-import React from "react";
-import Card from "react-bootstrap/Card";
-import { Link } from "react-router-dom";
-import { AiFillLike } from "react-icons/ai";
-import { FaComment } from "react-icons/fa";
-import axios from "axios";
-import { useSelector } from "react-redux";
-import MainModal from "./MainModal";
-import UsersList from "./UsersList";
-import useModal from "../hooks/use-modal";
-import Button from "react-bootstrap/Button";
+import React, { useState } from "react"
+import Card from "react-bootstrap/Card"
+import { Link } from "react-router-dom"
+import { AiFillLike } from "react-icons/ai"
+import { FaComment } from "react-icons/fa"
+import axios from "axios"
+import { useSelector } from "react-redux"
+import MainModal from "./MainModal"
+import UsersList from "./UsersList"
+import useModal from "../hooks/use-modal"
+import Button from "react-bootstrap/Button"
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL
 
 const Post = ({
   id,
@@ -22,9 +22,11 @@ const Post = ({
   onPostLike,
   onPostDelete,
 }) => {
-  const [modalShowed, showModal, hideModal, title] = useModal();
-  const token = useSelector((state) => state.auth.token);
-  const authUserId = useSelector((state) => state.auth.user.id);
+  const [modalShowed, showModal, hideModal, title] = useModal()
+  const token = useSelector((state) => state.auth.token)
+  const authUserId = useSelector((state) => state.auth.user.id)
+  const [commmentsVisible, setCommentsVisible] = useState(false)
+
   const likeUnlikePostHandler = async () => {
     try {
       await axios.post(
@@ -35,20 +37,24 @@ const Post = ({
             Authorization: `Bearer ${token}`,
           },
         }
-      );
-      onPostLike(id);
+      )
+      onPostLike(id)
     } catch (error) {}
-  };
+  }
 
-  const userLiked = likes.some((l) => l.id === authUserId);
+  const userLiked = likes.some((l) => l.id === authUserId)
 
   const likesClickHandler = () => {
-    showModal("Post likes");
-  };
+    showModal("Post likes")
+  }
 
   const deletePostHandler = () => {
-    onPostDelete(id);
-  };
+    onPostDelete(id)
+  }
+
+  const commentsClickHandler = () => {
+    setCommentsVisible((prevState) => !prevState)
+  }
 
   return (
     <>
@@ -81,17 +87,21 @@ const Post = ({
                 <AiFillLike />
               </span>
             </div>
-            <div style={{ marginLeft: "25px", cursor: "pointer" }}>
+            <div
+              style={{ marginLeft: "25px", cursor: "pointer" }}
+              onClick={commentsClickHandler}
+            >
               <span>{comments.length} </span>
               <span>
                 <FaComment />
               </span>
             </div>
           </div>
+          {commmentsVisible && <p>Comments</p>}
         </Card.Body>
       </Card>
     </>
-  );
-};
+  )
+}
 
-export default Post;
+export default Post

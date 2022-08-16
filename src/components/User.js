@@ -1,6 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import ProfilePicture from "./ProfilePicture";
+import React from "react"
+import { Link } from "react-router-dom"
+import ProfilePicture from "./ProfilePicture"
 
 const User = ({ user }) => {
   return (
@@ -26,7 +26,7 @@ const User = ({ user }) => {
         </div>
       </div>
     </Link>
-  );
-};
+  )
+}
 
-export default User;
+export default User

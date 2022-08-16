@@ -1,6 +1,6 @@
-import React from "react";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
+import React from "react"
+import Button from "react-bootstrap/Button"
+import Modal from "react-bootstrap/Modal"
 
 const MainModal = ({ show, onHide, title, children }) => {
   return (
@@ -13,7 +13,7 @@ const MainModal = ({ show, onHide, title, children }) => {
         <Button onClick={onHide}>Close</Button>
       </Modal.Footer>
     </Modal>
-  );
-};
+  )
+}
 
-export default MainModal;
+export default MainModal
