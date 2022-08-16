@@ -40,10 +40,7 @@ const Post = ({
     } catch (error) {}
   };
 
-  const userLiked = likes.some((l) => {
-    console.log(id, l.id, authUserId);
-    return l.id === authUserId;
-  });
+  const userLiked = likes.some((l) => l.id === authUserId);
 
   const likesClickHandler = () => {
     showModal("Post likes");
