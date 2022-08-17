@@ -67,7 +67,7 @@ const Posts = ({
 
   return (
     <>
-      <Card className="mt-5 w-50 m-auto">
+      <Card className="mt-5 mb-5 w-50 m-auto">
         <Card.Header style={{ fontSize: "2.2rem" }} className="text-center">
           {`${user.username}'s`} posts
         </Card.Header>
