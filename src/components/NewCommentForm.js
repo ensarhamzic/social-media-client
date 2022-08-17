@@ -30,7 +30,7 @@ const NewCommentForm = ({ onCommentSubmit }) => {
         {textError && <p className="text-danger">{textError}</p>}
       </Form.Group>
       <Button variant="primary" type="submit">
-        Add Post
+        Add Comment
       </Button>
     </Form>
   )

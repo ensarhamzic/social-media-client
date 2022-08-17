@@ -8,37 +8,36 @@ import { Container } from "react-bootstrap"
 import Profile from "./pages/Profile"
 import Register from "./pages/Register"
 import { useEffect } from "react"
-import axios from "axios"
 import { authActions } from "./store/auth-slice"
-const API_URL = process.env.REACT_APP_API_URL
+import useAxios from "./hooks/use-axios"
 
 function App() {
   const dispatch = useDispatch()
+  const { sendRequest: verifyToken } = useAxios()
   const isAuth = useSelector((state) => state.auth.isAuth)
 
   useEffect(() => {
     const token = localStorage.getItem("token")
-    const verifyToken = async (userToken) => {
-      try {
-        const response = await axios.post(
-          `${API_URL}/users/verify`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        const { user } = response.data
-        dispatch(authActions.login({ token, user }))
-      } catch (error) {
-        localStorage.removeItem("token")
-      }
-    }
     if (token) {
-      verifyToken(token)
+      ;(async () => {
+        try {
+          const response = await verifyToken({
+            url: "/users/verify",
+            method: "POST",
+            auth: true,
+            userToken: token,
+          })
+
+          if (response.status === 200) {
+            const { user } = response.data
+            dispatch(authActions.login({ token, user }))
+          }
+        } catch (error) {
+          localStorage.removeItem("token")
+        }
+      })()
     }
-  }, [dispatch])
+  }, [dispatch, verifyToken])
 
   return (
     <>

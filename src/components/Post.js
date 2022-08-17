@@ -3,15 +3,14 @@ import Card from "react-bootstrap/Card"
 import { Link } from "react-router-dom"
 import { AiFillLike } from "react-icons/ai"
 import { FaComment } from "react-icons/fa"
-import axios from "axios"
 import { useSelector } from "react-redux"
 import MainModal from "./MainModal"
 import UsersList from "./UsersList"
 import useModal from "../hooks/use-modal"
 import Button from "react-bootstrap/Button"
 import Comments from "./Comments"
-
-const API_URL = process.env.REACT_APP_API_URL
+import useAxios from "../hooks/use-axios"
+import Spinner from "react-bootstrap/Spinner"
 
 const Post = ({
   id,
@@ -25,24 +24,19 @@ const Post = ({
   onCommentSubmit,
   onCommentDelete,
 }) => {
+  const { sendRequest: likeUnlike } = useAxios()
+  const { isLoading: deletingPost, sendRequest: deletePost } = useAxios()
   const [modalShowed, showModal, hideModal, title] = useModal()
-  const token = useSelector((state) => state.auth.token)
   const authUserId = useSelector((state) => state.auth.user.id)
   const [commmentsVisible, setCommentsVisible] = useState(false)
 
   const likeUnlikePostHandler = async () => {
-    try {
-      await axios.post(
-        `${API_URL}/posts/${id}/likes`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      onPostLike(id)
-    } catch (error) {}
+    const response = await likeUnlike({
+      url: `/posts/${id}/likes`,
+      method: "POST",
+      auth: true,
+    })
+    if (response.status === 200) onPostLike(id)
   }
 
   const userLiked = likes.some((l) => l.id === authUserId)
@@ -51,8 +45,15 @@ const Post = ({
     showModal("Post likes")
   }
 
-  const deletePostHandler = () => {
-    onPostDelete(id)
+  const deletePostHandler = async () => {
+    try {
+      const response = await deletePost({
+        url: `/posts/${id}`,
+        method: "DELETE",
+        auth: true,
+      })
+      if (response.status === 200) onPostDelete(id)
+    } catch (error) {}
   }
 
   const commentsClickHandler = () => {
@@ -107,6 +108,14 @@ const Post = ({
                 <FaComment />
               </span>
             </div>
+            {deletingPost && (
+              <Spinner
+                animation="border"
+                role="status"
+                size="sm"
+                style={{ marginLeft: "20px", marginTop: "10px" }}
+              />
+            )}
           </div>
           {commmentsVisible && (
             <Comments

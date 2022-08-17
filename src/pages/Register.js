@@ -1,33 +1,36 @@
 import Card from "react-bootstrap/Card"
 import RegisterForm from "../components/RegisterForm"
-import axios from "axios"
-import { useState } from "react"
 import { useDispatch } from "react-redux"
 import { authActions } from "../store/auth-slice"
 import { LinkContainer } from "react-router-bootstrap"
-
-const API_URL = process.env.REACT_APP_API_URL
+import useAxios from "../hooks/use-axios"
+import Spinner from "react-bootstrap/Spinner"
 
 const Register = () => {
+  const { isLoading, error, sendRequest: register } = useAxios()
   const dispatch = useDispatch()
-  const [registerError, setRegisterError] = useState(null)
   const registerUserHandler = async (user) => {
-    try {
-      const response = await axios.post(`${API_URL}/users/register`, user)
+    const response = await register({
+      url: "/users/register",
+      method: "POST",
+      data: user,
+      auth: false,
+    })
+    if (response) {
       const { token, user: newUserData } = response.data
-      setRegisterError(null)
       dispatch(authActions.login({ token, user: newUserData }))
-    } catch (error) {
-      setRegisterError(error.response.data.message)
     }
   }
   return (
     <Card className="mt-5 m-auto" style={{ width: "40%" }}>
       <Card.Body>
-        <Card.Title>Register as new user</Card.Title>
+        <Card.Title>
+          Register as new user{" "}
+          {isLoading && <Spinner animation="border" role="status" size="sm" />}
+        </Card.Title>
         <RegisterForm
           onFormSubmit={registerUserHandler}
-          registerError={registerError}
+          registerError={error}
         />
         <LinkContainer to="/login">
           <Card.Link>Already have an account? Login here</Card.Link>

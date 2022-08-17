@@ -1,11 +1,9 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import axios from "axios"
 import Card from "react-bootstrap/Card"
 import Post from "./Post"
 import NewPostForm from "./NewPostForm"
-
-const API_URL = process.env.REACT_APP_API_URL
+import useAxios from "../hooks/use-axios"
 
 const Posts = ({
   posts,
@@ -16,20 +14,21 @@ const Posts = ({
   onSubmitComment,
   onCommentDelete,
 }) => {
-  const token = useSelector((state) => state.auth.token)
+  const {
+    isLoading: addPostLoading,
+    error: addPostError,
+    sendRequest: addPost,
+  } = useAxios()
   const authUserId = useSelector((state) => state.auth.user.id)
 
   const postSubmitHandler = async (text) => {
     try {
-      const response = await axios.post(
-        `${API_URL}/posts`,
-        { text },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      const response = await addPost({
+        url: "/posts",
+        method: "POST",
+        data: { text },
+        auth: true,
+      })
       const newPost = {
         id: response.data.id,
         text: response.data.text,
@@ -38,19 +37,12 @@ const Posts = ({
         comments: [],
         likes: [],
       }
-      onAddPost(newPost)
-    } catch (error) {}
+      if (response.status === 201) onAddPost(newPost)
+    } catch {}
   }
 
   const postDeleteHandler = async (postId) => {
-    try {
-      await axios.delete(`${API_URL}/posts/${postId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      onPostDelete(postId)
-    } catch (error) {}
+    onPostDelete(postId)
   }
 
   const postLikeHandler = (postId) => {
@@ -73,7 +65,11 @@ const Posts = ({
         </Card.Header>
         <Card.Body>
           {parseInt(user.id) === authUserId && (
-            <NewPostForm onSubmitPost={postSubmitHandler} />
+            <NewPostForm
+              onSubmitPost={postSubmitHandler}
+              addPostLoading={addPostLoading}
+              addPostError={addPostError}
+            />
           )}
 
           {posts.length > 0 &&

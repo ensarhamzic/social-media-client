@@ -1,31 +1,37 @@
-import React, { useState } from "react"
+import React from "react"
 import { useDispatch } from "react-redux"
 import { Card } from "react-bootstrap"
 import { authActions } from "../store/auth-slice"
 import LoginForm from "../components/LoginForm"
-import axios from "axios"
 import { LinkContainer } from "react-router-bootstrap"
-
-const API_URL = process.env.REACT_APP_API_URL
+import useAxios from "../hooks/use-axios"
+import Spinner from "react-bootstrap/Spinner"
 
 const Login = () => {
+  const { isLoading, error, sendRequest: login } = useAxios()
+
   const dispatch = useDispatch()
-  const [loginError, setLoginError] = useState(null)
   const loginUserHandler = async (user) => {
-    try {
-      const response = await axios.post(`${API_URL}/users/login`, user)
+    const response = await login({
+      url: "/users/login",
+      method: "POST",
+      data: user,
+      auth: false,
+    })
+    if (response) {
       const { token, user: userData } = response.data
-      setLoginError(null)
       dispatch(authActions.login({ token, user: userData }))
-    } catch (error) {
-      setLoginError(error.response.data.message)
     }
   }
+
   return (
     <Card className="mt-5 m-auto" style={{ width: "40%" }}>
       <Card.Body>
-        <Card.Title>Login to your account</Card.Title>
-        <LoginForm onFormSubmit={loginUserHandler} loginError={loginError} />
+        <Card.Title>
+          Login to your account{" "}
+          {isLoading && <Spinner animation="border" role="status" size="sm" />}
+        </Card.Title>
+        <LoginForm onFormSubmit={loginUserHandler} loginError={error} />
         <LinkContainer to="/register">
           <Card.Link>Don't have an account yet? Register here</Card.Link>
         </LinkContainer>

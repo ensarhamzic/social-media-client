@@ -5,16 +5,15 @@ import { useSelector } from "react-redux/es/exports"
 import UsersList from "./UsersList"
 import MainModal from "./MainModal"
 import Button from "react-bootstrap/Button"
-import axios from "axios"
 import useModal from "../hooks/use-modal"
-
-const API_URL = process.env.REACT_APP_API_URL
+import useAxios from "../hooks/use-axios"
+import Spinner from "react-bootstrap/Spinner"
 
 const UserDetails = ({ user, onFollowUnfollow }) => {
+  const { isLoading, sendRequest: followUnfollow } = useAxios()
   const [modalShowed, showModal, hideModal, title] = useModal()
   const [usersListdata, setUsersListData] = useState([])
   const authUserId = useSelector((state) => state.auth.user.id)
-  const token = useSelector((state) => state.auth.token)
   const followersClickHandler = () => {
     setUsersListData(user.followers)
     showModal(`${user.username}'s followers`)
@@ -26,25 +25,30 @@ const UserDetails = ({ user, onFollowUnfollow }) => {
 
   const followUnfollowUserHandler = async () => {
     try {
-      await axios.post(
-        `${API_URL}/users/${user.id}/follow`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      onFollowUnfollow()
-    } catch (error) {}
+      const response = await followUnfollow({
+        url: `/users/${user.id}/follow`,
+        method: "POST",
+        auth: true,
+      })
+      if (response.status === 200) onFollowUnfollow()
+    } catch {}
   }
 
   const isUserFollowing = user.followers.some((f) => f.id === authUserId)
   const followButton = (
-    <Button
-      onClick={followUnfollowUserHandler}
-      variant={`${isUserFollowing ? "light" : "primary"}`}
-    >{`${isUserFollowing ? "Unfollow" : "Follow"}`}</Button>
+    <div className="d-flex">
+      <Button
+        onClick={followUnfollowUserHandler}
+        variant={`${isUserFollowing ? "light" : "primary"}`}
+      >{`${isUserFollowing ? "Unfollow" : "Follow"}`}</Button>
+      {isLoading && (
+        <Spinner
+          animation="border"
+          role="status"
+          style={{ marginLeft: "20px" }}
+        />
+      )}
+    </div>
   )
   return (
     <>

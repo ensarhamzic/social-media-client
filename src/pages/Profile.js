@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 import Posts from "../components/Posts"
-import axios from "axios"
 import UserDetails from "../components/UserDetails"
-
-const API_URL = process.env.REACT_APP_API_URL
+import useAxios from "../hooks/use-axios"
+import Spinner from "react-bootstrap/Spinner"
 
 const Profile = ({ forAuthUser }) => {
   let userId = useSelector((state) => state.auth.user.id)
@@ -16,16 +15,24 @@ const Profile = ({ forAuthUser }) => {
   const token = useSelector((state) => state.auth.token)
   const [posts, setPosts] = useState([])
   const [user, setUser] = useState(null)
-  const [error, setError] = useState(null)
+
+  const {
+    isLoading: userLoading,
+    error: userError,
+    sendRequest: getUser,
+  } = useAxios()
+  const { sendRequest: commentPost } = useAxios()
+  const { sendRequest: deleteComment } = useAxios()
 
   useEffect(() => {
     const getPosts = async () => {
       try {
-        const response = await axios.get(`${API_URL}/users/${userId}/posts`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const response = await getUser({
+          url: `/users/${userId}/posts`,
+          method: "GET",
+          auth: true,
         })
+        if (!response.status) return
         const following = response.data.following.map((f) => {
           return { ...f.following }
         })
@@ -99,14 +106,12 @@ const Profile = ({ forAuthUser }) => {
           })
         )
         setUser(profileUser)
-        setError(null)
-      } catch (error) {
-        setError("Something went wrong")
+      } catch {
         setPosts([])
       }
     }
     getPosts()
-  }, [userId, token, authUser])
+  }, [userId, token, authUser, getUser])
 
   const addPostHandler = (newPost) => {
     setPosts((prevPosts) => [newPost, ...prevPosts])
@@ -138,17 +143,13 @@ const Profile = ({ forAuthUser }) => {
 
   const commentSubmitHandler = async (postId, commentText) => {
     try {
-      const response = await axios.post(
-        `${API_URL}/posts/${postId}/comments`,
-        {
-          text: commentText,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      const response = await commentPost({
+        url: `/posts/${postId}/comments`,
+        method: "POST",
+        data: { text: commentText },
+        auth: true,
+      })
+      if (!response.status) return
       const newComment = {
         id: response.data.id,
         text: response.data.text,
@@ -164,16 +165,17 @@ const Profile = ({ forAuthUser }) => {
         return { ...p }
       })
       setPosts(newPosts)
-    } catch (error) {}
+    } catch {}
   }
 
   const commentDeleteHandler = async (postId, commentId) => {
     try {
-      await axios.delete(`${API_URL}/posts/${postId}/comments/${commentId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const response = await deleteComment({
+        url: `/posts/${postId}/comments/${commentId}`,
+        method: "DELETE",
+        auth: true,
       })
+      if (!response.status) return
       const newPost = { ...posts.find((p) => p.id === postId) }
       newPost.comments = newPost.comments.filter((c) => c.id !== commentId)
       const newPosts = posts.map((p) => {
@@ -181,20 +183,25 @@ const Profile = ({ forAuthUser }) => {
         return { ...p }
       })
       setPosts(newPosts)
-    } catch (error) {}
+    } catch {}
   }
 
   return (
     <div>
-      {error && (
+      {userLoading && (
+        <div style={{ margin: "auto", marginTop: "50px", width: "100px" }}>
+          <Spinner animation="border" role="status" />
+        </div>
+      )}
+      {userError && (
         <p className="text-center text-muted mt-5" style={{ fontSize: "2rem" }}>
-          {error}
+          {userError}
         </p>
       )}
-      {!error && user && (
+      {!userError && user && (
         <UserDetails user={user} onFollowUnfollow={followUnfollowHandler} />
       )}
-      {!error && user && (
+      {!userError && user && (
         <Posts
           user={user}
           posts={posts}

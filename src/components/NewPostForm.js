@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react"
 import Form from "react-bootstrap/Form"
 import Button from "react-bootstrap/Button"
+import Spinner from "react-bootstrap/Spinner"
 
-const NewPostForm = ({ onSubmitPost }) => {
+const NewPostForm = ({ onSubmitPost, addPostLoading, addPostError }) => {
   const textInputRef = useRef()
   const [textError, setTextError] = useState(null)
   const [formSubmitted, setFormSubmitted] = useState(false)
@@ -25,9 +26,15 @@ const NewPostForm = ({ onSubmitPost }) => {
   return (
     <Form className="mb-5" onSubmit={formSubmitHandler}>
       <Form.Group className="mb-3" controlId="postText">
-        <Form.Label>Add New Post</Form.Label>
+        <Form.Label>
+          Add New Post{" "}
+          {addPostLoading && (
+            <Spinner animation="border" role="status" size="sm" />
+          )}
+        </Form.Label>
         <Form.Control as="textarea" rows={3} size="lg" ref={textInputRef} />
         {textError && <p className="text-danger">{textError}</p>}
+        {addPostError && <p className="text-danger">{addPostError}</p>}
       </Form.Group>
       <Button variant="primary" type="submit">
         Add Post
