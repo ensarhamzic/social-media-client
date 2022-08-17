@@ -18,9 +18,8 @@ const useAxios = () => {
     if (data) axiosConfig.data = data
     if (auth)
       axiosConfig.headers = {
-        Authentication: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       }
-
     let response = null
     try {
       const serverResponse = await axios(axiosConfig)
