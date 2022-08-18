@@ -1,5 +1,5 @@
 import React from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { Card } from "react-bootstrap"
 import { authActions } from "../store/auth-slice"
 import LoginForm from "../components/LoginForm"
@@ -9,6 +9,7 @@ import Spinner from "react-bootstrap/Spinner"
 
 const Login = () => {
   const { isLoading, error, sendRequest: login } = useAxios()
+  const token = useSelector((state) => state.auth.token)
 
   const dispatch = useDispatch()
   const loginUserHandler = async (user) => {
@@ -16,7 +17,7 @@ const Login = () => {
       url: "/users/login",
       method: "POST",
       data: user,
-      auth: false,
+      token,
     })
     if (response) {
       const { token, user: userData } = response.data

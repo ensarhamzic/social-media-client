@@ -24,6 +24,7 @@ const Post = ({
   onCommentSubmit,
   onCommentDelete,
 }) => {
+  const token = useSelector((state) => state.auth.token)
   const { sendRequest: likeUnlike } = useAxios()
   const { isLoading: deletingPost, sendRequest: deletePost } = useAxios()
   const [modalShowed, showModal, hideModal, title] = useModal()
@@ -34,7 +35,7 @@ const Post = ({
     const response = await likeUnlike({
       url: `/posts/${id}/likes`,
       method: "POST",
-      auth: true,
+      token,
     })
     if (response.status === 200) onPostLike(id)
   }
@@ -50,7 +51,7 @@ const Post = ({
       const response = await deletePost({
         url: `/posts/${id}`,
         method: "DELETE",
-        auth: true,
+        token,
       })
       if (response.status === 200) onPostDelete(id)
     } catch (error) {}

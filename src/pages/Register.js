@@ -5,16 +5,18 @@ import { authActions } from "../store/auth-slice"
 import { LinkContainer } from "react-router-bootstrap"
 import useAxios from "../hooks/use-axios"
 import Spinner from "react-bootstrap/Spinner"
+import { useSelector } from "react-redux"
 
 const Register = () => {
   const { isLoading, error, sendRequest: register } = useAxios()
+  const token = useSelector((state) => state.auth.token)
   const dispatch = useDispatch()
   const registerUserHandler = async (user) => {
     const response = await register({
       url: "/users/register",
       method: "POST",
       data: user,
-      auth: false,
+      token,
     })
     if (response) {
       const { token, user: newUserData } = response.data

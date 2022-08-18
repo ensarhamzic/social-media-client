@@ -24,8 +24,7 @@ function App() {
           const response = await verifyToken({
             url: "/users/verify",
             method: "POST",
-            auth: true,
-            userToken: token,
+            token,
           })
 
           if (response.status === 200) {

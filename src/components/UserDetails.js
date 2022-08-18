@@ -14,6 +14,7 @@ const UserDetails = ({ user, onFollowUnfollow }) => {
   const [modalShowed, showModal, hideModal, title] = useModal()
   const [usersListdata, setUsersListData] = useState([])
   const authUserId = useSelector((state) => state.auth.user.id)
+  const token = useSelector((state) => state.auth.token)
   const followersClickHandler = () => {
     setUsersListData(user.followers)
     showModal(`${user.username}'s followers`)
@@ -28,7 +29,7 @@ const UserDetails = ({ user, onFollowUnfollow }) => {
       const response = await followUnfollow({
         url: `/users/${user.id}/follow`,
         method: "POST",
-        auth: true,
+        token,
       })
       if (response.status === 200) onFollowUnfollow()
     } catch {}

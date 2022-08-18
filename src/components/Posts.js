@@ -20,6 +20,7 @@ const Posts = ({
     sendRequest: addPost,
   } = useAxios()
   const authUserId = useSelector((state) => state.auth.user.id)
+  const token = useSelector((state) => state.auth.token)
 
   const postSubmitHandler = async (text) => {
     try {
@@ -27,7 +28,7 @@ const Posts = ({
         url: "/posts",
         method: "POST",
         data: { text },
-        auth: true,
+        token,
       })
       const newPost = {
         id: response.data.id,

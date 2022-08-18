@@ -30,7 +30,7 @@ const Profile = ({ forAuthUser }) => {
         const response = await getUser({
           url: `/users/${userId}/posts`,
           method: "GET",
-          auth: true,
+          token,
         })
         if (!response.status) return
         const following = response.data.following.map((f) => {
@@ -147,7 +147,7 @@ const Profile = ({ forAuthUser }) => {
         url: `/posts/${postId}/comments`,
         method: "POST",
         data: { text: commentText },
-        auth: true,
+        token,
       })
       if (!response.status) return
       const newComment = {
@@ -173,7 +173,7 @@ const Profile = ({ forAuthUser }) => {
       const response = await deleteComment({
         url: `/posts/${postId}/comments/${commentId}`,
         method: "DELETE",
-        auth: true,
+        token,
       })
       if (!response.status) return
       const newPost = { ...posts.find((p) => p.id === postId) }
