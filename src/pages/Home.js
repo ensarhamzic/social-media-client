@@ -27,10 +27,24 @@ const Home = () => {
     })
     setPosts(newPosts)
   }
-  const commentSubmitHandler = (postId, commentText) => {
-    console.log(postId, commentText)
+  const commentSubmitHandler = (postId, newComment) => {
+    const newPost = { ...posts.find((p) => p.id === postId) }
+    newPost.comments.unshift(newComment)
+    const newPosts = posts.map((p) => {
+      if (p.id === postId) return newPost
+      return { ...p }
+    })
+    setPosts(newPosts)
   }
-  const commentDeleteHandler = () => {}
+  const commentDeleteHandler = (postId, commentId) => {
+    const newPost = { ...posts.find((p) => p.id === postId) }
+    newPost.comments = newPost.comments.filter((c) => c.id !== commentId)
+    const newPosts = posts.map((p) => {
+      if (p.id === postId) return newPost
+      return { ...p }
+    })
+    setPosts(newPosts)
+  }
 
   useEffect(() => {
     ;(async () => {
