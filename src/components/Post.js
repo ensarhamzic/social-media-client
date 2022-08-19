@@ -11,12 +11,14 @@ import Button from "react-bootstrap/Button"
 import Comments from "./Comments"
 import useAxios from "../hooks/use-axios"
 import Spinner from "react-bootstrap/Spinner"
+import ProfilePicture from "./ProfilePicture"
 
 const Post = ({
   id,
   text,
   userId,
   username,
+  pictureURL,
   comments,
   likes,
   onPostLike,
@@ -76,10 +78,19 @@ const Post = ({
       </MainModal>
       <Card className="mt-2">
         <Card.Body>
-          <div className="d-flex justify-content-between">
-            <p className="fw-bold">
-              <Link to={`/profile/${userId}`}>{username}</Link>
-            </p>
+          <div className="d-flex justify-content-between mb-3">
+            <Link to={`/profile/${userId}`}>
+              <div className="d-flex">
+                <ProfilePicture pictureURL={pictureURL} width={40} />
+                <p
+                  className="fw-bold"
+                  style={{ marginTop: "5px", marginLeft: "20px" }}
+                >
+                  {username}
+                </p>
+              </div>
+            </Link>
+
             {userId === authUserId && (
               <Button variant="danger" size="sm" onClick={deletePostHandler}>
                 Delete
