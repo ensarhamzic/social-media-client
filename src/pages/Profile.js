@@ -21,8 +21,6 @@ const Profile = ({ forAuthUser }) => {
     error: userError,
     sendRequest: getUser,
   } = useAxios()
-  const { sendRequest: commentPost } = useAxios()
-  const { sendRequest: deleteComment } = useAxios()
 
   useEffect(() => {
     const getPosts = async () => {
@@ -147,49 +145,24 @@ const Profile = ({ forAuthUser }) => {
     setPosts((prevPosts) => prevPosts.filter((p) => p.id !== postId))
   }
 
-  const commentSubmitHandler = async (postId, commentText) => {
-    try {
-      const response = await commentPost({
-        url: `/posts/${postId}/comments`,
-        method: "POST",
-        data: { text: commentText },
-        token,
-      })
-      if (!response.status) return
-      const newComment = {
-        id: response.data.id,
-        text: response.data.text,
-        user: {
-          ...authUser,
-        },
-      }
-
-      const newPost = { ...posts.find((p) => p.id === postId) }
-      newPost.comments.unshift(newComment)
-      const newPosts = posts.map((p) => {
-        if (p.id === postId) return newPost
-        return { ...p }
-      })
-      setPosts(newPosts)
-    } catch {}
+  const commentSubmitHandler = (postId, newComment) => {
+    const newPost = { ...posts.find((p) => p.id === postId) }
+    newPost.comments.unshift(newComment)
+    const newPosts = posts.map((p) => {
+      if (p.id === postId) return newPost
+      return { ...p }
+    })
+    setPosts(newPosts)
   }
 
   const commentDeleteHandler = async (postId, commentId) => {
-    try {
-      const response = await deleteComment({
-        url: `/posts/${postId}/comments/${commentId}`,
-        method: "DELETE",
-        token,
-      })
-      if (!response.status) return
-      const newPost = { ...posts.find((p) => p.id === postId) }
-      newPost.comments = newPost.comments.filter((c) => c.id !== commentId)
-      const newPosts = posts.map((p) => {
-        if (p.id === postId) return newPost
-        return { ...p }
-      })
-      setPosts(newPosts)
-    } catch {}
+    const newPost = { ...posts.find((p) => p.id === postId) }
+    newPost.comments = newPost.comments.filter((c) => c.id !== commentId)
+    const newPosts = posts.map((p) => {
+      if (p.id === postId) return newPost
+      return { ...p }
+    })
+    setPosts(newPosts)
   }
 
   return (
