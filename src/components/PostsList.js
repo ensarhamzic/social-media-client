@@ -33,6 +33,7 @@ const PostsList = ({
             id={post.id}
             text={post.text}
             userId={post.user.id}
+            pictureURL={post.user.pictureURL}
             username={post.user.username}
             comments={post.comments}
             likes={post.likes}
