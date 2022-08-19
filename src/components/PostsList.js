@@ -48,7 +48,7 @@ const PostsList = ({
         <p
           className="fw-bold"
           style={{ fontSize: "1.2rem", textAlign: "center" }}
-        >{`This user has no posts!`}</p>
+        >{`No posts!`}</p>
       )}
     </>
   )
