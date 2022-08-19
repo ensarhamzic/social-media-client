@@ -46,12 +46,13 @@ const Profile = ({ forAuthUser }) => {
           email: response.data.email,
           firstName: response.data.firstName,
           lastName: response.data.lastName,
-          pictureUrl: response.data.pictureUrl,
+          pictureURL: response.data.pictureURL,
           followers,
           following,
         }
 
         const formattedPosts = response.data.posts.map((p) => {
+          const postUser = { ...profileUser }
           const newLikes = p.likes.map((l) => {
             if (!l.user) {
               // Backend returns empty object if there is current user's profile user in the likes array
@@ -61,7 +62,7 @@ const Profile = ({ forAuthUser }) => {
                 email: profileUser.email,
                 firstName: profileUser.firstName,
                 lastName: profileUser.lastName,
-                pictureUrl: profileUser.pictureUrl,
+                pictureURL: profileUser.pictureURL,
               }
             }
             return { ...l.user }
@@ -82,7 +83,7 @@ const Profile = ({ forAuthUser }) => {
                   email: profileUser.email,
                   firstName: profileUser.firstName,
                   lastName: profileUser.lastName,
-                  pictureUrl: profileUser.pictureUrl,
+                  pictureURL: profileUser.pictureURL,
                 },
               }
             } else {
@@ -97,7 +98,12 @@ const Profile = ({ forAuthUser }) => {
           newComments = newComments.sort((a, b) => {
             return new Date(b.date) - new Date(a.date)
           })
-          return { ...p, likes: newLikes, comments: newComments }
+          return {
+            ...p,
+            user: postUser,
+            likes: newLikes,
+            comments: newComments,
+          }
         })
 
         setPosts(

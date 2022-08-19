@@ -9,6 +9,7 @@ const useAxios = () => {
 
   const sendRequest = useCallback(
     async ({ url, method, data, token, errorMessage }) => {
+      console.log(url)
       setIsLoading(true)
       let axiosConfig = {
         url: `${API_URL}${url}`,
