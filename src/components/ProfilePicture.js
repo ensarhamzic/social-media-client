@@ -4,7 +4,7 @@ import DefaultProfilePicture from "../images/default_profile_picture.jpg"
 const ProfilePicture = ({ pictureURL, width }) => {
   return (
     <img
-      style={{ borderRadius: "50%", width: `${width}px` }}
+      style={{ borderRadius: "50%", width: `${width}px`, height: `${width}px` }}
       src={pictureURL ?? DefaultProfilePicture}
       alt="profile"
     />
