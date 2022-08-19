@@ -16,8 +16,8 @@ const PostsList = ({
     onPostLike(postId)
   }
 
-  const commentSubmitHandler = (postId, commentText) => {
-    onSubmitComment(postId, commentText)
+  const commentSubmitHandler = (postId, newComment) => {
+    onSubmitComment(postId, newComment)
   }
 
   const commentDeleteHandler = (postId, commentId) => {
