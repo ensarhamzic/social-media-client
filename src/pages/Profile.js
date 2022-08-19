@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
-import Posts from "../components/Posts"
 import UserDetails from "../components/UserDetails"
 import useAxios from "../hooks/use-axios"
 import Spinner from "react-bootstrap/Spinner"
+import UserPosts from "../components/UserPosts"
 
 const Profile = ({ forAuthUser }) => {
   let userId = useSelector((state) => state.auth.user.id)
@@ -208,7 +208,7 @@ const Profile = ({ forAuthUser }) => {
         <UserDetails user={user} onFollowUnfollow={followUnfollowHandler} />
       )}
       {!userError && user && (
-        <Posts
+        <UserPosts
           user={user}
           posts={posts}
           onAddPost={addPostHandler}
