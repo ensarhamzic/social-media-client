@@ -27,10 +27,13 @@ const Post = ({
   onCommentDelete,
 }) => {
   const token = useSelector((state) => state.auth.token)
+  const authUser = useSelector((state) => state.auth.user)
+
   const { sendRequest: likeUnlike } = useAxios()
+  const { sendRequest: commentPost } = useAxios()
   const { isLoading: deletingPost, sendRequest: deletePost } = useAxios()
+  const { sendRequest: deleteComment } = useAxios()
   const [modalShowed, showModal, hideModal, title] = useModal()
-  const authUserId = useSelector((state) => state.auth.user.id)
   const [commmentsVisible, setCommentsVisible] = useState(false)
 
   const likeUnlikePostHandler = async () => {
@@ -42,7 +45,7 @@ const Post = ({
     if (response.status === 200) onPostLike(id)
   }
 
-  const userLiked = likes.some((l) => l.id === authUserId)
+  const userLiked = likes.some((l) => l.id === authUser.id)
 
   const likesClickHandler = () => {
     showModal("Post likes")
@@ -63,12 +66,36 @@ const Post = ({
     setCommentsVisible((prevState) => !prevState)
   }
 
-  const commentSubmitHandler = (commentText) => {
-    onCommentSubmit(id, commentText)
+  const commentSubmitHandler = async (commentText) => {
+    try {
+      const response = await commentPost({
+        url: `/posts/${id}/comments`,
+        method: "POST",
+        data: { text: commentText },
+        token,
+      })
+      if (!response.status) return
+      const newComment = {
+        id: response.data.id,
+        text: response.data.text,
+        user: {
+          ...authUser,
+        },
+      }
+      onCommentSubmit(id, newComment)
+    } catch {}
   }
 
-  const commentDeleteHandler = (commentId) => {
-    onCommentDelete(id, commentId)
+  const commentDeleteHandler = async (commentId) => {
+    try {
+      const response = await deleteComment({
+        url: `/posts/${id}/comments/${commentId}`,
+        method: "DELETE",
+        token,
+      })
+      if (!response.status) return
+      onCommentDelete(id, commentId)
+    } catch {}
   }
 
   return (
@@ -91,7 +118,7 @@ const Post = ({
               </div>
             </Link>
 
-            {userId === authUserId && (
+            {userId === authUser.id && (
               <Button variant="danger" size="sm" onClick={deletePostHandler}>
                 Delete
               </Button>
