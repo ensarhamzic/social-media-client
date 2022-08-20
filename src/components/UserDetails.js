@@ -59,7 +59,7 @@ const UserDetails = ({ user, onFollowUnfollow }) => {
       <Card className="mt-5 w-75 m-auto">
         <Card.Body className="d-lg-flex m-4">
           <div>
-            <ProfilePicture url={user.pictureURL} width={200} />
+            <ProfilePicture pictureURL={user.pictureURL} width={200} />
           </div>
           <div
             style={{
