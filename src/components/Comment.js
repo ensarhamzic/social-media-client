@@ -14,7 +14,7 @@ const Comment = ({ id, text, user, onCommentDelete }) => {
     <div className="d-flex mt-3">
       <div>
         <Link to={`/profile/${user.id}`}>
-          <ProfilePicture pictureUrl={user.pictureURL} width={50} />
+          <ProfilePicture pictureURL={user.pictureURL} width={50} />
         </Link>
       </div>
       <div style={{ marginLeft: "15px", width: "70%" }}>
