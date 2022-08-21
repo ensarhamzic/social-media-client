@@ -37,6 +37,7 @@ const UserPosts = ({
         user: {
           id: user.id,
           username: user.username,
+          pictureURL: user.pictureURL,
         },
         comments: [],
         likes: [],
