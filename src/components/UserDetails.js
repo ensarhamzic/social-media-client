@@ -8,6 +8,7 @@ import Button from "react-bootstrap/Button"
 import useModal from "../hooks/use-modal"
 import useAxios from "../hooks/use-axios"
 import Spinner from "react-bootstrap/Spinner"
+import { Link } from "react-router-dom"
 
 const UserDetails = ({ user, onFollowUnfollow }) => {
   const { isLoading, sendRequest: followUnfollow } = useAxios()
@@ -37,7 +38,7 @@ const UserDetails = ({ user, onFollowUnfollow }) => {
 
   const isUserFollowing = user.followers.some((f) => f.id === authUserId)
   const followButton = (
-    <div className="d-flex">
+    <>
       <Button
         onClick={followUnfollowUserHandler}
         variant={`${isUserFollowing ? "light" : "primary"}`}
@@ -49,7 +50,13 @@ const UserDetails = ({ user, onFollowUnfollow }) => {
           style={{ marginLeft: "20px" }}
         />
       )}
-    </div>
+    </>
+  )
+
+  const editProfileButton = (
+    <Link to="/profile/edit" className="btn btn-info">
+      Edit profile
+    </Link>
   )
   return (
     <>
@@ -89,7 +96,10 @@ const UserDetails = ({ user, onFollowUnfollow }) => {
                 <span className="fw-bold">{user.following.length}</span>
               </p>
             </div>
-            {authUserId !== user.id && followButton}
+            <div className="d-flex">
+              {authUserId !== user.id && followButton}
+              {authUserId === user.id && editProfileButton}
+            </div>
           </div>
         </Card.Body>
       </Card>
