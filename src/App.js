@@ -10,6 +10,7 @@ import Register from "./pages/Register"
 import { useEffect } from "react"
 import { authActions } from "./store/auth-slice"
 import useAxios from "./hooks/use-axios"
+import EditProfile from "./pages/EditProfile"
 
 function App() {
   const dispatch = useDispatch()
@@ -65,6 +66,7 @@ function App() {
               element={<Profile forAuthUser={false} />}
             />
           )}
+          {isAuth && <Route path="/profile/edit" element={<EditProfile />} />}
         </Routes>
       </Container>
     </>
