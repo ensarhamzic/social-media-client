@@ -8,15 +8,26 @@ const useAxios = () => {
   const [error, setError] = useState(null)
 
   const sendRequest = useCallback(
-    async ({ url, method, data, token, errorMessage }) => {
+    async ({
+      url,
+      method,
+      data,
+      token,
+      errorMessage,
+      contentType = "application/json",
+    }) => {
       setIsLoading(true)
       let axiosConfig = {
         url: `${API_URL}${url}`,
         method,
+        headers: {
+          "Content-Type": contentType,
+        },
       }
       if (data) axiosConfig.data = data
       if (token)
         axiosConfig.headers = {
+          ...axiosConfig.headers,
           Authorization: `Bearer ${token}`,
         }
       let response = null
