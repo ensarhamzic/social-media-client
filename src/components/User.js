@@ -10,7 +10,7 @@ const User = ({ user }) => {
     >
       <div className="d-flex m-4">
         <div>
-          <ProfilePicture url={user.pictureURL} width={80} />
+          <ProfilePicture pictureURL={user.pictureURL} width={80} />
         </div>
         <div
           style={{
