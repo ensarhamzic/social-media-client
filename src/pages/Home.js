@@ -4,6 +4,7 @@ import { useSelector } from "react-redux/es/exports"
 import Card from "react-bootstrap/Card"
 import PostsList from "../components/PostsList"
 import Spinner from "react-bootstrap/Spinner"
+import SearchUsers from "../components/SearchUsers"
 
 const Home = () => {
   const [posts, setPosts] = useState([])
@@ -74,33 +75,46 @@ const Home = () => {
   }, [getUserFeed, token])
 
   return (
-    <Card className="mt-5 mb-5 w-50 m-auto">
-      <Card.Header style={{ fontSize: "2.2rem" }} className="text-center">
-        Your feed
-      </Card.Header>
-      <Card.Body>
-        {!feedError && !feedLoading && (
-          <PostsList
-            posts={posts}
-            onPostLike={postLikeHandler}
-            onSubmitComment={commentSubmitHandler}
-            onCommentDelete={commentDeleteHandler}
-          />
-        )}
+    <>
+      <Card className="mt-5 mb-5 w-50 m-auto">
+        <Card.Header style={{ fontSize: "2.2rem" }} className="text-center">
+          Find Users
+        </Card.Header>
+        <Card.Body>
+          <SearchUsers />
+        </Card.Body>
+      </Card>
+      <Card className="mt-5 mb-5 w-50 m-auto">
+        <Card.Header style={{ fontSize: "2.2rem" }} className="text-center">
+          Your feed
+        </Card.Header>
+        <Card.Body>
+          {!feedError && !feedLoading && (
+            <PostsList
+              posts={posts}
+              onPostLike={postLikeHandler}
+              onSubmitComment={commentSubmitHandler}
+              onCommentDelete={commentDeleteHandler}
+            />
+          )}
 
-        {feedLoading && (
-          <div className="text-center mt-3">
-            <Spinner animation="border" role="status" />
-          </div>
-        )}
+          {feedLoading && (
+            <div className="text-center mt-3">
+              <Spinner animation="border" role="status" />
+            </div>
+          )}
 
-        {feedError && (
-          <p className="text-center text-muted" style={{ fontSize: "1.3rem" }}>
-            {feedError}
-          </p>
-        )}
-      </Card.Body>
-    </Card>
+          {feedError && (
+            <p
+              className="text-center text-muted"
+              style={{ fontSize: "1.3rem" }}
+            >
+              {feedError}
+            </p>
+          )}
+        </Card.Body>
+      </Card>
+    </>
   )
 }
 
