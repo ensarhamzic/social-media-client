@@ -31,13 +31,6 @@ const Profile = ({ forAuthUser }) => {
           token,
         })
         if (!response.status) return
-        const following = response.data.following.map((f) => {
-          return { ...f.following }
-        })
-        const followers = response.data.followers.map((f) => {
-          return { ...f.user }
-        })
-
         const profileUser = {
           id: response.data.id,
           username: response.data.username,
@@ -45,24 +38,13 @@ const Profile = ({ forAuthUser }) => {
           firstName: response.data.firstName,
           lastName: response.data.lastName,
           pictureURL: response.data.pictureURL,
-          followers,
-          following,
+          followers: response.data.followers,
+          following: response.data.following,
         }
 
         const formattedPosts = response.data.posts.map((p) => {
           const postUser = { ...profileUser }
           const newLikes = p.likes.map((l) => {
-            if (!l.user) {
-              // Backend returns empty object if there is current user's profile user in the likes array
-              return {
-                id: profileUser.id,
-                username: profileUser.username,
-                email: profileUser.email,
-                firstName: profileUser.firstName,
-                lastName: profileUser.lastName,
-                pictureURL: profileUser.pictureURL,
-              }
-            }
             return { ...l.user }
           })
           let newComments = p.comments.map((c) => {
@@ -71,26 +53,11 @@ const Profile = ({ forAuthUser }) => {
               text: c.text,
               date: c.date,
             }
-            if (!c.user) {
-              // Backend returns empty object if there is current user's profile user in the comments array
-              return {
-                ...comment,
-                user: {
-                  id: profileUser.id,
-                  username: profileUser.username,
-                  email: profileUser.email,
-                  firstName: profileUser.firstName,
-                  lastName: profileUser.lastName,
-                  pictureURL: profileUser.pictureURL,
-                },
-              }
-            } else {
-              return {
-                ...comment,
-                user: {
-                  ...c.user,
-                },
-              }
+            return {
+              ...comment,
+              user: {
+                ...c.user,
+              },
             }
           })
           newComments = newComments.sort((a, b) => {
