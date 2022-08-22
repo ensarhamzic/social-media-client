@@ -3,7 +3,7 @@ import User from "./User"
 
 const UsersList = ({ users, onProfileClick }) => {
   const profileClickHandler = () => {
-    onProfileClick()
+    if (onProfileClick) onProfileClick()
   }
   return (
     <>
