@@ -6,13 +6,16 @@ import { LinkContainer } from "react-router-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
 import { Button } from "react-bootstrap"
 import { authActions } from "../store/auth-slice"
+import { useNavigate } from "react-router-dom"
 
 const MainNavbar = () => {
+  const navigate = useNavigate()
   const isAuth = useSelector((state) => state.auth.isAuth)
   const dispatch = useDispatch()
 
   const logoutHandler = () => {
     dispatch(authActions.logout())
+    navigate("/login", { replace: true })
   }
 
   let navLinks = (
