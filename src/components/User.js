@@ -2,10 +2,14 @@ import React from "react"
 import { Link } from "react-router-dom"
 import ProfilePicture from "./ProfilePicture"
 
-const User = ({ user }) => {
+const User = ({ user, onProfileClick }) => {
+  const profileLinkClickHandler = () => {
+    onProfileClick()
+  }
   return (
     <Link
       to={`/profile/${user.id}`}
+      onClick={profileLinkClickHandler}
       style={{ color: "black", textDecoration: "none" }}
     >
       <div className="d-flex m-4">

@@ -98,10 +98,14 @@ const Post = ({
     } catch {}
   }
 
+  const profileClickHandler = () => {
+    hideModal()
+  }
+
   return (
     <>
       <MainModal show={modalShowed} onHide={hideModal} title={title}>
-        <UsersList users={likes} />
+        <UsersList users={likes} onProfileClick={profileClickHandler} />
       </MainModal>
       <Card className="mt-2">
         <Card.Body>

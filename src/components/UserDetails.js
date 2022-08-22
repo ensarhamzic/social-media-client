@@ -58,10 +58,15 @@ const UserDetails = ({ user, onFollowUnfollow }) => {
       Edit profile
     </Link>
   )
+
+  const profileClickHandler = () => {
+    hideModal()
+  }
+
   return (
     <>
       <MainModal show={modalShowed} onHide={hideModal} title={title}>
-        <UsersList users={usersListdata} />
+        <UsersList users={usersListdata} onProfileClick={profileClickHandler} />
       </MainModal>
       <Card className="mt-5 w-75 m-auto">
         <Card.Body className="d-lg-flex m-4">

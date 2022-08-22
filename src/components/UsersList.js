@@ -1,10 +1,16 @@
 import React from "react"
 import User from "./User"
 
-const UsersList = ({ users }) => {
+const UsersList = ({ users, onProfileClick }) => {
+  const profileClickHandler = () => {
+    onProfileClick()
+  }
   return (
     <>
-      {users.length > 0 && users.map((u) => <User key={u.id} user={u} />)}
+      {users.length > 0 &&
+        users.map((u) => (
+          <User key={u.id} user={u} onProfileClick={profileClickHandler} />
+        ))}
       {users.length === 0 && (
         <p
           style={{
