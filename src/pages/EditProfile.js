@@ -21,6 +21,8 @@ const EditProfile = () => {
     bodyFormData.append("Email", userData.email)
     bodyFormData.append("Username", userData.username)
     bodyFormData.append("Password", userData.password)
+    bodyFormData.append("DeleteProfilePicture", userData.deletePicture)
+    bodyFormData.append("ProfilePicture", userData.profilePicture)
     try {
       const response = await updateUser({
         url: "/users",
@@ -30,7 +32,6 @@ const EditProfile = () => {
         token,
       })
       const { token: userToken, user } = response.data
-      console.log(response)
       dispatch(authActions.login({ token: userToken, user }))
       navigate("/profile")
     } catch {}
@@ -41,7 +42,14 @@ const EditProfile = () => {
       <Card.Body>
         <Card.Title>
           Update your profile details
-          {isLoading && <Spinner animation="border" role="status" size="sm" />}
+          {isLoading && (
+            <Spinner
+              animation="border"
+              role="status"
+              size="sm"
+              style={{ marginLeft: "15px" }}
+            />
+          )}
         </Card.Title>
         <UpdateUserForm onFormSubmit={updateUserHandler} updateError={error} />
       </Card.Body>

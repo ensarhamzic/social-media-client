@@ -30,12 +30,42 @@ const formReducer = (state, action) => {
         ...state,
         password: { ...state.password, value: action.value },
       }
+    case "deletePictureChange": {
+      if (!action.value) {
+        return {
+          ...state,
+          deletePicture: {
+            value: action.value,
+          },
+        }
+      } else {
+        return {
+          ...state,
+          deletePicture: {
+            value: action.value,
+          },
+          profilePicture: {
+            value: null,
+            error: null,
+          },
+        }
+      }
+    }
+    case "profilePictureChange":
+      return {
+        ...state,
+        profilePicture: {
+          ...state.profilePicture,
+          value: action.value,
+        },
+      }
     case "validateForm":
       let firstNameError = null
       let lastNameError = null
       let emailError = null
       let usernameError = null
       let passwordError = null
+      let profilePictureError = null
       if (state.firstName.value.trim() === "")
         firstNameError = "Must not be empty"
       else firstNameError = null
@@ -58,6 +88,17 @@ const formReducer = (state, action) => {
         passwordError = "Must be at least 8 characters long"
       else passwordError = null
 
+      if (state.profilePicture.value) {
+        const extension = state.profilePicture.value.name.substr(
+          state.profilePicture.value.name.lastIndexOf(".")
+        )
+        const allowedExtensionsRegx = /(\.jpg|\.jpeg|\.png)$/i
+        const isAllowed = allowedExtensionsRegx.test(extension)
+        if (!isAllowed)
+          profilePictureError = "Must be either .jpg, .jpeg or .png"
+        else profilePictureError = null
+      }
+
       return {
         ...state,
         firstName: { ...state.firstName, error: firstNameError },
@@ -65,6 +106,7 @@ const formReducer = (state, action) => {
         email: { ...state.email, error: emailError },
         username: { ...state.username, error: usernameError },
         password: { ...state.password, error: passwordError },
+        profilePicture: { ...state.profilePicture, error: profilePictureError },
       }
 
     default:
@@ -96,6 +138,13 @@ const UpdateUserForm = ({ onFormSubmit, updateError }) => {
       value: "",
       error: null,
     },
+    profilePicture: {
+      value: null,
+      error: null,
+    },
+    deletePicture: {
+      value: false,
+    },
   }
   const [formState, dispatchForm] = useReducer(formReducer, initialState)
   const formValid =
@@ -103,13 +152,16 @@ const UpdateUserForm = ({ onFormSubmit, updateError }) => {
     !formState.firstName.error &&
     !formState.email.error &&
     !formState.username.error &&
-    !formState.password.error
+    !formState.password.error &&
+    !formState.profilePicture.error
 
   const firstName = formState.firstName.value
   const lastName = formState.lastName.value
   const username = formState.username.value
   const email = formState.email.value
   const password = formState.password.value
+  const profilePicture = formState.profilePicture.value
+  const deletePicture = formState.deletePicture.value
 
   const formSubmitHandler = (event) => {
     event.preventDefault()
@@ -125,6 +177,8 @@ const UpdateUserForm = ({ onFormSubmit, updateError }) => {
         email,
         username,
         password,
+        profilePicture,
+        deletePicture,
       }
       onFormSubmit(userData)
       setFormSubmitted(false)
@@ -138,6 +192,8 @@ const UpdateUserForm = ({ onFormSubmit, updateError }) => {
     username,
     email,
     password,
+    profilePicture,
+    deletePicture,
   ])
 
   return (
@@ -212,6 +268,39 @@ const UpdateUserForm = ({ onFormSubmit, updateError }) => {
           <p className="text-danger">{formState.password.error}</p>
         )}
       </Form.Group>
+      {authUser.pictureURL && (
+        <Form.Group controlId="profilePicture" className="mt-3">
+          <Form.Check
+            type="checkbox"
+            id="checkbox"
+            label="Delete current profile picture"
+            checked={formState.deletePicture.value}
+            onChange={(e) =>
+              dispatchForm({
+                type: "deletePictureChange",
+                value: e.target.checked,
+              })
+            }
+          />
+        </Form.Group>
+      )}
+      {!deletePicture && (
+        <Form.Group controlId="profilePicture" className="mt-1">
+          <Form.Label>New Profile Picture</Form.Label>
+          <Form.Control
+            type="file"
+            onChange={(e) =>
+              dispatchForm({
+                type: "profilePictureChange",
+                value: e.target.files[0],
+              })
+            }
+          />
+          {formState.profilePicture.error && (
+            <p className="text-danger">{formState.profilePicture.error}</p>
+          )}
+        </Form.Group>
+      )}
       {updateError && <p className="text-danger">{updateError}</p>}
       <Button variant="primary" type="submit" className="mt-3">
         Update Profile
