@@ -150,10 +150,10 @@ const Post = ({
               style={{ marginLeft: "25px", cursor: "pointer" }}
               onClick={commentsClickHandler}
             >
-              <span>{comments.length} </span>
               <span>
-                <FaComment /> Comments
+                <FaComment />
               </span>
+              <span> {comments.length} Comments </span>
             </div>
             {deletingPost && (
               <Spinner
