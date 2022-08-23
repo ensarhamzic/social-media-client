@@ -11,6 +11,7 @@ import { useEffect } from "react"
 import { authActions } from "./store/auth-slice"
 import useAxios from "./hooks/use-axios"
 import EditProfile from "./pages/EditProfile"
+import NotFound from "./components/NotFound"
 
 function App() {
   const dispatch = useDispatch()
@@ -39,35 +40,39 @@ function App() {
     }
   }, [dispatch, verifyToken])
 
+  let routes = (
+    <>
+      <Route path="/" element={<Navigate to="/login" />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/home" element={<Navigate to="/login" />} />
+      <Route path="/profile" element={<Navigate to="/login" />} />
+      <Route path="/profile/:id" element={<Navigate to="/login" />} />
+      <Route path="/profile/edit" element={<Navigate to="/login" />} />
+      <Route path="*" element={<NotFound />} />
+    </>
+  )
+
+  if (isAuth) {
+    routes = (
+      <>
+        <Route path="/" element={<Navigate to="/home" />} />
+        <Route path="/login" element={<Navigate to="/profile" />} />
+        <Route path="/register" element={<Navigate to="/profile" />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/profile" element={<Profile forAuthUser={true} />} />
+        <Route path="/profile/:id" element={<Profile forAuthUser={false} />} />
+        <Route path="/profile/edit" element={<EditProfile />} />
+        <Route path="*" element={<NotFound />} />
+      </>
+    )
+  }
+
   return (
     <>
       <MainNavbar />
       <Container>
-        <Routes>
-          <Route
-            path="/"
-            element={<Navigate to={isAuth ? "/home" : "/login"} />}
-          />
-          {!isAuth && <Route path="/login" element={<Login />} />}
-          {isAuth && (
-            <Route path="/login" element={<Navigate to="/profile" />} />
-          )}
-          {!isAuth && <Route path="/register" element={<Register />} />}
-          {isAuth && (
-            <Route path="/register" element={<Navigate to="/profile" />} />
-          )}
-          {isAuth && <Route path="/home" element={<Home />} />}
-          {isAuth && (
-            <Route path="/profile" element={<Profile forAuthUser={true} />} />
-          )}
-          {isAuth && (
-            <Route
-              path="/profile/:id"
-              element={<Profile forAuthUser={false} />}
-            />
-          )}
-          {isAuth && <Route path="/profile/edit" element={<EditProfile />} />}
-        </Routes>
+        <Routes>{routes}</Routes>
       </Container>
     </>
   )
