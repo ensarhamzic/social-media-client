@@ -41,7 +41,7 @@ const MainNavbar = () => {
         </LinkContainer>
         <Button
           onClick={logoutHandler}
-          variant="light"
+          variant="secondary"
           className={classes.button}
         >
           Logout

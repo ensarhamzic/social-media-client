@@ -1,6 +1,6 @@
 @media only screen and (max-width: 991px) {
   .button {
-    text-align: left !important;
-    padding-left: 0 !important;
+    text-align: center;
+    margin: 10px;
   }
 }
