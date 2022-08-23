@@ -1,6 +1,7 @@
 import React from "react"
 import { Link } from "react-router-dom"
 import ProfilePicture from "./ProfilePicture"
+import classes from "./User.module.css"
 
 const User = ({ user, onProfileClick }) => {
   const profileLinkClickHandler = () => {
@@ -12,21 +13,19 @@ const User = ({ user, onProfileClick }) => {
       onClick={profileLinkClickHandler}
       style={{ color: "black", textDecoration: "none" }}
     >
-      <div className="d-flex m-4">
+      <div className={`d-flex ${classes.content}`}>
         <div>
-          <ProfilePicture pictureURL={user.pictureURL} width={80} />
+          <ProfilePicture pictureURL={user.pictureURL} width={60} />
         </div>
         <div
           style={{
             marginLeft: "25px",
           }}
         >
-          <p style={{ fontSize: "1.8rem", fontWeight: "bold", margin: "0" }}>
+          <p className={classes.fullName}>
             {user.firstName} {user.lastName}
           </p>
-          <p style={{ fontSize: "1.4rem", margin: "0" }}>
-            username: {user.username}
-          </p>
+          <p className={classes.username}>username: {user.username}</p>
         </div>
       </div>
     </Link>

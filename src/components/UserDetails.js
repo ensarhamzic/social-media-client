@@ -9,6 +9,7 @@ import useModal from "../hooks/use-modal"
 import useAxios from "../hooks/use-axios"
 import Spinner from "react-bootstrap/Spinner"
 import { Link } from "react-router-dom"
+import classes from "./UserDetails.module.css"
 
 const UserDetails = ({ user, onFollowUnfollow }) => {
   const { isLoading, sendRequest: followUnfollow } = useAxios()
@@ -68,16 +69,12 @@ const UserDetails = ({ user, onFollowUnfollow }) => {
       <MainModal show={modalShowed} onHide={hideModal} title={title}>
         <UsersList users={usersListdata} onProfileClick={profileClickHandler} />
       </MainModal>
-      <Card className="mt-5 w-75 m-auto">
-        <Card.Body className="d-lg-flex m-4">
-          <div>
+      <Card className={`mt-5 m-auto ${classes.card}`}>
+        <Card.Body className="d-lg-flex m-lg-4">
+          <div className={classes.userImage}>
             <ProfilePicture pictureURL={user.pictureURL} width={200} />
           </div>
-          <div
-            style={{
-              marginLeft: "50px",
-            }}
-          >
+          <div className={classes.userContent}>
             <h1>
               {user.firstName} {user.lastName}
             </h1>

@@ -1,0 +1,11 @@
+.content {
+  margin-left: 15px;
+  width: 70%;
+}
+
+@media only screen and (max-width: 767px) {
+  .content {
+    margin-left: 5px;
+    width: 100%;
+  }
+}

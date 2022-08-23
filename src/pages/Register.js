@@ -6,6 +6,7 @@ import { LinkContainer } from "react-router-bootstrap"
 import useAxios from "../hooks/use-axios"
 import Spinner from "react-bootstrap/Spinner"
 import { useSelector } from "react-redux"
+import classes from "./Login.module.css"
 
 const Register = () => {
   const { isLoading, error, sendRequest: register } = useAxios()
@@ -24,7 +25,7 @@ const Register = () => {
     }
   }
   return (
-    <Card className="mt-5 m-auto" style={{ width: "40%" }}>
+    <Card className={`mt-5 m-auto ${classes.card}`}>
       <Card.Body>
         <Card.Title>
           Register as new user{" "}

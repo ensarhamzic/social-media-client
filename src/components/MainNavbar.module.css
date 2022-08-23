@@ -1,0 +1,6 @@
+@media only screen and (max-width: 991px) {
+  .button {
+    text-align: left;
+    padding-left: 0;
+  }
+}

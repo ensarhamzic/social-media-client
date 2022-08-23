@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { Button } from "react-bootstrap"
 import { authActions } from "../store/auth-slice"
 import { useNavigate } from "react-router-dom"
+import classes from "./MainNavbar.module.css"
 
 const MainNavbar = () => {
   const navigate = useNavigate()
@@ -38,7 +39,11 @@ const MainNavbar = () => {
         <LinkContainer to="/profile">
           <Nav.Link>Profile</Nav.Link>
         </LinkContainer>
-        <Button onClick={logoutHandler} variant="light">
+        <Button
+          onClick={logoutHandler}
+          variant="light"
+          className={classes.button}
+        >
           Logout
         </Button>
       </>

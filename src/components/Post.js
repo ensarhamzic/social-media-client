@@ -110,7 +110,10 @@ const Post = ({
       <Card className="mt-2">
         <Card.Body>
           <div className="d-flex justify-content-between mb-3">
-            <Link to={`/profile/${userId}`}>
+            <Link
+              to={`/profile/${userId}`}
+              style={{ color: "black", textDecoration: "none" }}
+            >
               <div className="d-flex">
                 <ProfilePicture pictureURL={pictureURL} width={40} />
                 <p

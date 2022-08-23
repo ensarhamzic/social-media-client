@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import ProfilePicture from "./ProfilePicture"
 import Button from "react-bootstrap/Button"
 import { useSelector } from "react-redux"
+import classes from "./Comment.module.css"
 
 const Comment = ({ id, text, user, onCommentDelete }) => {
   const authUserId = useSelector((state) => state.auth.user.id)
@@ -17,9 +18,12 @@ const Comment = ({ id, text, user, onCommentDelete }) => {
           <ProfilePicture pictureURL={user.pictureURL} width={50} />
         </Link>
       </div>
-      <div style={{ marginLeft: "15px", width: "70%" }}>
+      <div className={classes.content}>
         <div className="d-flex justify-content-between">
-          <Link to={`/profile/${user.id}`}>
+          <Link
+            to={`/profile/${user.id}`}
+            style={{ color: "black", textDecoration: "none" }}
+          >
             <p style={{ margin: "0" }} className="fw-bold">
               {user.username}
             </p>

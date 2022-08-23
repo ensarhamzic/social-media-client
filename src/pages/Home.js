@@ -5,6 +5,7 @@ import Card from "react-bootstrap/Card"
 import PostsList from "../components/PostsList"
 import Spinner from "react-bootstrap/Spinner"
 import SearchUsers from "../components/SearchUsers"
+import classes from "./Home.module.css"
 
 const Home = () => {
   const [posts, setPosts] = useState([])
@@ -76,7 +77,7 @@ const Home = () => {
 
   return (
     <>
-      <Card className="mt-5 mb-5 w-50 m-auto">
+      <Card className={`mt-5 mb-5 m-auto ${classes.card}`}>
         <Card.Header style={{ fontSize: "2.2rem" }} className="text-center">
           Find Users
         </Card.Header>
@@ -84,7 +85,7 @@ const Home = () => {
           <SearchUsers />
         </Card.Body>
       </Card>
-      <Card className="mt-5 mb-5 w-50 m-auto">
+      <Card className={`mt-5 mb-5 m-auto ${classes.card}`}>
         <Card.Header style={{ fontSize: "2.2rem" }} className="text-center">
           Your feed
         </Card.Header>

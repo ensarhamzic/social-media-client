@@ -4,6 +4,7 @@ import NewPostForm from "./NewPostForm"
 import { useSelector } from "react-redux/es/exports"
 import useAxios from "../hooks/use-axios"
 import PostsList from "./PostsList"
+import classes from "./UserPosts.module.css"
 
 const UserPosts = ({
   user,
@@ -62,7 +63,7 @@ const UserPosts = ({
     onCommentDelete(postId, commentId)
   }
   return (
-    <Card className="mt-5 mb-5 w-50 m-auto">
+    <Card className={`mt-5 mb-5 m-auto ${classes.card}`}>
       <Card.Header style={{ fontSize: "2.2rem" }} className="text-center">
         {`${user.username}'s`} posts
       </Card.Header>

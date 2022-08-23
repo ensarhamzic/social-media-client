@@ -6,6 +6,7 @@ import LoginForm from "../components/LoginForm"
 import { LinkContainer } from "react-router-bootstrap"
 import useAxios from "../hooks/use-axios"
 import Spinner from "react-bootstrap/Spinner"
+import classes from "./Login.module.css"
 
 const Login = () => {
   const { isLoading, error, sendRequest: login } = useAxios()
@@ -26,7 +27,7 @@ const Login = () => {
   }
 
   return (
-    <Card className="mt-5 m-auto" style={{ width: "40%" }}>
+    <Card className={`mt-5 m-auto ${classes.card}`}>
       <Card.Body>
         <Card.Title>
           Login to your account{" "}

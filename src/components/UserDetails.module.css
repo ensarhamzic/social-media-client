@@ -1,0 +1,24 @@
+.card {
+  width: 75%;
+}
+
+.userContent {
+  margin-left: 50px;
+}
+
+@media only screen and (max-width: 991px) {
+  .card {
+    width: 85%;
+  }
+  .userContent {
+    margin-left: 0;
+    text-align: center;
+  }
+  .userContent div {
+    justify-content: center;
+  }
+
+  .userImage {
+    text-align: center;
+  }
+}
