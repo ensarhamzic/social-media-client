@@ -12,6 +12,7 @@ import Comments from "./Comments"
 import useAxios from "../hooks/use-axios"
 import Spinner from "react-bootstrap/Spinner"
 import ProfilePicture from "./ProfilePicture"
+import classes from "./Post.module.css"
 
 const Post = ({
   id,
@@ -132,7 +133,7 @@ const Post = ({
             )}
           </div>
           <p style={{ fontSize: "1.3rem" }}>{text}</p>
-          <div className="d-flex w-100 fw-bold" style={{ fontSize: "1.3rem" }}>
+          <div className={`d-flex w-100 fw-bold ${classes.controls}`}>
             <div>
               <span onClick={likesClickHandler} style={{ cursor: "pointer" }}>
                 {likes.length}{" "}
@@ -142,7 +143,7 @@ const Post = ({
                 style={{ cursor: "pointer" }}
                 className={`${userLiked ? "text-primary" : ""}`}
               >
-                <AiFillLike />
+                <AiFillLike /> Like
               </span>
             </div>
             <div
@@ -151,7 +152,7 @@ const Post = ({
             >
               <span>{comments.length} </span>
               <span>
-                <FaComment />
+                <FaComment /> Comments
               </span>
             </div>
             {deletingPost && (

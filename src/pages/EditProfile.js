@@ -7,6 +7,7 @@ import useAxios from "../hooks/use-axios"
 import { useNavigate } from "react-router-dom"
 import { authActions } from "../store/auth-slice"
 import { useDispatch } from "react-redux"
+import classes from "./Login.module.css"
 
 const EditProfile = () => {
   const dispatch = useDispatch()
@@ -38,7 +39,7 @@ const EditProfile = () => {
   }
 
   return (
-    <Card className="mt-5 m-auto" style={{ width: "40%" }}>
+    <Card className={`mt-5 m-auto ${classes.card}`}>
       <Card.Body>
         <Card.Title>
           Update your profile details
