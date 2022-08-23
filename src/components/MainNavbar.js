@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import Container from "react-bootstrap/Container"
 import Nav from "react-bootstrap/Nav"
 import Navbar from "react-bootstrap/Navbar"
@@ -6,13 +6,20 @@ import { LinkContainer } from "react-router-bootstrap"
 import { useDispatch, useSelector } from "react-redux"
 import { Button } from "react-bootstrap"
 import { authActions } from "../store/auth-slice"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useLocation } from "react-router-dom"
 import classes from "./MainNavbar.module.css"
 
 const MainNavbar = () => {
+  const location = useLocation()
+  const [expanded, setExpanded] = useState(false)
   const navigate = useNavigate()
   const isAuth = useSelector((state) => state.auth.isAuth)
   const dispatch = useDispatch()
+
+  const { pathname } = location
+  useEffect(() => {
+    setExpanded(false)
+  }, [pathname])
 
   const logoutHandler = () => {
     dispatch(authActions.logout())
@@ -49,8 +56,12 @@ const MainNavbar = () => {
       </>
     )
   }
+
+  const toggleHandler = () => {
+    setExpanded((prevState) => !prevState)
+  }
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar bg="light" expand="lg" expanded={expanded} onToggle={toggleHandler}>
       <Container>
         <LinkContainer to="/">
           <Navbar.Brand>Social Media App</Navbar.Brand>
