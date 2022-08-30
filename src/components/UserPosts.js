@@ -14,6 +14,7 @@ const UserPosts = ({
   onPostDelete,
   onSubmitComment,
   onCommentDelete,
+  onUpdatePost,
 }) => {
   const authUserId = useSelector((state) => state.auth.user.id)
   const token = useSelector((state) => state.auth.token)
@@ -62,6 +63,11 @@ const UserPosts = ({
   const commentDeleteHandler = (postId, commentId) => {
     onCommentDelete(postId, commentId)
   }
+
+  const updatePostHandler = (postId, text) => {
+    onUpdatePost(postId, text)
+  }
+
   return (
     <Card className={`mt-5 mb-5 m-auto ${classes.card}`}>
       <Card.Header style={{ fontSize: "2.2rem" }} className="text-center">
@@ -82,6 +88,7 @@ const UserPosts = ({
           onPostDelete={postDeleteHandler}
           onSubmitComment={commentSubmitHandler}
           onCommentDelete={commentDeleteHandler}
+          onUpdatePost={updatePostHandler}
         />
       </Card.Body>
     </Card>

@@ -7,6 +7,7 @@ const PostsList = ({
   onPostDelete,
   onSubmitComment,
   onCommentDelete,
+  onUpdatePost,
 }) => {
   const postDeleteHandler = async (postId) => {
     onPostDelete(postId)
@@ -22,6 +23,10 @@ const PostsList = ({
 
   const commentDeleteHandler = (postId, commentId) => {
     onCommentDelete(postId, commentId)
+  }
+
+  const postUpdateHandler = (postId, text) => {
+    onUpdatePost(postId, text)
   }
 
   return (
@@ -41,6 +46,7 @@ const PostsList = ({
             onPostDelete={postDeleteHandler}
             onCommentSubmit={commentSubmitHandler}
             onCommentDelete={commentDeleteHandler}
+            onUpdatePost={postUpdateHandler}
           />
         ))}
 

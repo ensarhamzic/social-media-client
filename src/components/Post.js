@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import Card from "react-bootstrap/Card"
 import { Link } from "react-router-dom"
 import { AiFillLike } from "react-icons/ai"
@@ -13,6 +13,8 @@ import Spinner from "react-bootstrap/Spinner"
 import ProfilePicture from "./ProfilePicture"
 import classes from "./Post.module.css"
 import Dropdown from "react-bootstrap/Dropdown"
+import Form from "react-bootstrap/Form"
+import Button from "react-bootstrap/Button"
 
 const Post = ({
   id,
@@ -26,16 +28,23 @@ const Post = ({
   onPostDelete,
   onCommentSubmit,
   onCommentDelete,
+  onUpdatePost,
 }) => {
   const token = useSelector((state) => state.auth.token)
   const authUser = useSelector((state) => state.auth.user)
 
   const { sendRequest: likeUnlike } = useAxios()
   const { sendRequest: commentPost } = useAxios()
+  const {
+    isLoading: updatePostLoading,
+    error: updatePostError,
+    sendRequest: editPost,
+  } = useAxios()
   const { isLoading: deletingPost, sendRequest: deletePost } = useAxios()
   const { sendRequest: deleteComment } = useAxios()
   const [modalShowed, showModal, hideModal, title] = useModal()
   const [commmentsVisible, setCommentsVisible] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
 
   const likeUnlikePostHandler = async () => {
     const response = await likeUnlike({
@@ -45,6 +54,10 @@ const Post = ({
     })
     if (response.status === 200) onPostLike(id)
   }
+
+  const textInputRef = useRef()
+  const [textError, setTextError] = useState(null)
+  const [formSubmitted, setFormSubmitted] = useState(false)
 
   const userLiked = likes.some((l) => l.id === authUser.id)
 
@@ -103,6 +116,43 @@ const Post = ({
     hideModal()
   }
 
+  const editPostClickHandler = () => {
+    setIsEditing(true)
+  }
+
+  const cancelUpdateClickHandler = () => {
+    setIsEditing(false)
+  }
+
+  const formSubmitHandler = (e) => {
+    e.preventDefault()
+    const postText = textInputRef.current.value
+    if (postText.trim().length === 0) setTextError("Must not be empty")
+    else setTextError(null)
+    setFormSubmitted(true)
+  }
+
+  useEffect(() => {
+    ;(async () => {
+      if (!textError && formSubmitted) {
+        const text = textInputRef.current.value
+        try {
+          const response = await editPost({
+            url: `/posts/${id}`,
+            method: "PUT",
+            data: { text },
+            token,
+          })
+          if (!response.status) return
+          onUpdatePost(id, text)
+          setIsEditing(false)
+        } catch {}
+
+        setFormSubmitted(false)
+      }
+    })()
+  }, [textError, formSubmitted, editPost, id, token, onUpdatePost])
+
   return (
     <>
       <MainModal show={modalShowed} onHide={hideModal} title={title}>
@@ -137,12 +187,49 @@ const Post = ({
                   <Dropdown.Item onClick={deletePostHandler}>
                     Delete
                   </Dropdown.Item>
-                  <Dropdown.Item>Edit</Dropdown.Item>
+                  <Dropdown.Item onClick={editPostClickHandler}>
+                    Edit
+                  </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             )}
           </div>
-          <p style={{ fontSize: "1.3rem" }}>{text}</p>
+          {!isEditing && <p style={{ fontSize: "1.3rem" }}>{text}</p>}
+          {isEditing && (
+            <Form className="mb-5" onSubmit={formSubmitHandler}>
+              <Form.Group className="mb-3" controlId="postText">
+                <Form.Label>
+                  Update post
+                  {updatePostLoading && (
+                    <Spinner animation="border" role="status" size="sm" />
+                  )}
+                </Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  size="lg"
+                  ref={textInputRef}
+                  defaultValue={text}
+                />
+                {textError && <p className="text-danger">{textError}</p>}
+                {updatePostError && (
+                  <p className="text-danger">{updatePostError}</p>
+                )}
+              </Form.Group>
+              <Button variant="primary" type="submit">
+                Update Post
+              </Button>
+              <Button
+                variant="danger"
+                type="button"
+                onClick={cancelUpdateClickHandler}
+                style={{ marginLeft: "10px" }}
+              >
+                Cancel
+              </Button>
+            </Form>
+          )}
+
           <div className={`d-flex w-100 fw-bold ${classes.controls}`}>
             <div>
               <span onClick={likesClickHandler} style={{ cursor: "pointer" }}>

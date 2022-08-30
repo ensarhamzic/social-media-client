@@ -132,6 +132,16 @@ const Profile = ({ forAuthUser }) => {
     setPosts(newPosts)
   }
 
+  const updatePostHandler = (postId, text) => {
+    const newPost = { ...posts.find((p) => p.id === postId) }
+    newPost.text = text
+    const newPosts = posts.map((p) => {
+      if (p.id === postId) return newPost
+      return { ...p }
+    })
+    setPosts(newPosts)
+  }
+
   return (
     <div>
       {userLoading && (
@@ -156,6 +166,7 @@ const Profile = ({ forAuthUser }) => {
           onPostDelete={postDeleteHandler}
           onSubmitComment={commentSubmitHandler}
           onCommentDelete={commentDeleteHandler}
+          onUpdatePost={updatePostHandler}
         />
       )}
     </div>
