@@ -1,12 +1,15 @@
 import React, { useRef, useState, useEffect } from "react"
 import { Button } from "react-bootstrap"
 import { Form } from "react-bootstrap"
+import { AiFillEye } from "react-icons/ai"
+import { AiFillEyeInvisible } from "react-icons/ai"
 
 const LoginForm = ({ onFormSubmit, loginError }) => {
   const [usernameError, setUsernameError] = useState(null)
   const [passwordError, setPasswordError] = useState(null)
   const formValid = !usernameError && !passwordError
   const [formSubmitted, setFormSubmitted] = useState(false)
+  const [passwordVisible, setPasswordVisible] = useState(false)
   const usernameInputRef = useRef()
   const passwordInputRef = useRef()
 
@@ -35,6 +38,10 @@ const LoginForm = ({ onFormSubmit, loginError }) => {
     }
   }, [formValid, formSubmitted, onFormSubmit])
 
+  const passwordVisibilityToggler = () => {
+    setPasswordVisible((prevState) => !prevState)
+  }
+
   return (
     <Form onSubmit={formSubmitHandler}>
       <Form.Group controlId="username" className="mt-1">
@@ -48,11 +55,25 @@ const LoginForm = ({ onFormSubmit, loginError }) => {
       </Form.Group>
       <Form.Group controlId="password" className="mt-1">
         <Form.Label>Password</Form.Label>
-        <Form.Control
-          type="password"
-          placeholder="Password"
-          ref={passwordInputRef}
-        />
+        <div className="d-flex align-items-center">
+          <Form.Control
+            type={!passwordVisible ? "password" : "text"}
+            placeholder="Password"
+            ref={passwordInputRef}
+          />
+          <div
+            onClick={passwordVisibilityToggler}
+            style={{
+              cursor: "pointer",
+              fontSize: "1.5rem",
+              paddingLeft: "10px",
+              textAlign: "center",
+              margin: "0",
+            }}
+          >
+            {passwordVisible ? <AiFillEyeInvisible /> : <AiFillEye />}
+          </div>
+        </div>
         {passwordError && <p className="text-danger">{passwordError}</p>}
       </Form.Group>
       {loginError && <p className="text-danger">{loginError}</p>}

@@ -2,6 +2,8 @@ import React, { useState, useReducer, useEffect } from "react"
 import Form from "react-bootstrap/Form"
 import Button from "react-bootstrap/Button"
 import { useSelector } from "react-redux"
+import { AiFillEye } from "react-icons/ai"
+import { AiFillEyeInvisible } from "react-icons/ai"
 
 const formReducer = (state, action) => {
   switch (action.type) {
@@ -147,6 +149,7 @@ const UpdateUserForm = ({ onFormSubmit, updateError }) => {
     },
   }
   const [formState, dispatchForm] = useReducer(formReducer, initialState)
+  const [passwordVisible, setPasswordVisible] = useState(false)
   const formValid =
     !formState.firstName.error &&
     !formState.firstName.error &&
@@ -167,6 +170,10 @@ const UpdateUserForm = ({ onFormSubmit, updateError }) => {
     event.preventDefault()
     dispatchForm({ type: "validateForm" })
     setFormSubmitted(true)
+  }
+
+  const passwordVisibilityToggler = () => {
+    setPasswordVisible((prevState) => !prevState)
   }
 
   useEffect(() => {
@@ -256,14 +263,28 @@ const UpdateUserForm = ({ onFormSubmit, updateError }) => {
       </Form.Group>
       <Form.Group controlId="password" className="mt-1">
         <Form.Label>New Password</Form.Label>
-        <Form.Control
-          type="password"
-          placeholder="Leave empty to not change"
-          value={formState.password.value}
-          onChange={(e) =>
-            dispatchForm({ type: "passwordChange", value: e.target.value })
-          }
-        />
+        <div className="d-flex align-items-center">
+          <Form.Control
+            type={!passwordVisible ? "password" : "text"}
+            placeholder="Leave empty to not change"
+            value={formState.password.value}
+            onChange={(e) =>
+              dispatchForm({ type: "passwordChange", value: e.target.value })
+            }
+          />
+          <div
+            onClick={passwordVisibilityToggler}
+            style={{
+              cursor: "pointer",
+              fontSize: "1.5rem",
+              paddingLeft: "10px",
+              textAlign: "center",
+              margin: "0",
+            }}
+          >
+            {passwordVisible ? <AiFillEyeInvisible /> : <AiFillEye />}
+          </div>
+        </div>
         {formState.password.error && (
           <p className="text-danger">{formState.password.error}</p>
         )}

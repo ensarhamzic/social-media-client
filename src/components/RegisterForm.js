@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react"
 import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai"
 
 const RegisterForm = ({ onFormSubmit, registerError }) => {
   const [firstNameError, setFirstNameError] = useState(null)
@@ -9,6 +10,8 @@ const RegisterForm = ({ onFormSubmit, registerError }) => {
   const [usernameError, setUsernameError] = useState(null)
   const [passwordError, setPasswordError] = useState(null)
   const [formSubmitted, setFormSubmitted] = useState(false)
+  const [passwordVisible, setPasswordVisible] = useState(false)
+  const [repeatPasswordVisible, setRepeatPasswordVisible] = useState(false)
   const formValid =
     !firstNameError &&
     !lastNameError &&
@@ -75,6 +78,13 @@ const RegisterForm = ({ onFormSubmit, registerError }) => {
     }
   }, [formValid, formSubmitted, onFormSubmit])
 
+  const passwordVisibilityToggler = () => {
+    setPasswordVisible((prevState) => !prevState)
+  }
+  const repeatPasswordVisibilityToggler = () => {
+    setRepeatPasswordVisible((prevState) => !prevState)
+  }
+
   return (
     <Form onSubmit={formSubmitHandler}>
       <Form.Group controlId="firstName" className="mt-1">
@@ -115,20 +125,49 @@ const RegisterForm = ({ onFormSubmit, registerError }) => {
       </Form.Group>
       <Form.Group controlId="password" className="mt-1">
         <Form.Label>Password</Form.Label>
-        <Form.Control
-          type="password"
-          placeholder="Password"
-          ref={passwordInputRef}
-        />
+        <div className="d-flex align-items-center">
+          <Form.Control
+            type={!passwordVisible ? "password" : "text"}
+            placeholder="Password"
+            ref={passwordInputRef}
+          />
+          <div
+            onClick={passwordVisibilityToggler}
+            style={{
+              cursor: "pointer",
+              fontSize: "1.5rem",
+              paddingLeft: "10px",
+              textAlign: "center",
+              margin: "0",
+            }}
+          >
+            {passwordVisible ? <AiFillEyeInvisible /> : <AiFillEye />}
+          </div>
+        </div>
+
         {passwordError && <p className="text-danger">{passwordError}</p>}
       </Form.Group>
       <Form.Group controlId="confirmPassword" className="mt-1">
         <Form.Label>Confirm password</Form.Label>
-        <Form.Control
-          type="password"
-          placeholder="Confirm password"
-          ref={confirmPasswordInputRef}
-        />
+        <div className="d-flex align-items-center">
+          <Form.Control
+            type={!repeatPasswordVisible ? "password" : "text"}
+            placeholder="Confirm password"
+            ref={confirmPasswordInputRef}
+          />
+          <div
+            onClick={repeatPasswordVisibilityToggler}
+            style={{
+              cursor: "pointer",
+              fontSize: "1.5rem",
+              paddingLeft: "10px",
+              textAlign: "center",
+              margin: "0",
+            }}
+          >
+            {passwordVisible ? <AiFillEyeInvisible /> : <AiFillEye />}
+          </div>
+        </div>
       </Form.Group>
       {registerError && <p className="text-danger">{registerError}</p>}
       <Button variant="primary" type="submit" className="mt-3">
