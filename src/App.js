@@ -19,20 +19,21 @@ import { authActions } from "./store/auth-slice"
 import useAxios from "./hooks/use-axios"
 import EditProfile from "./pages/EditProfile"
 import NotFound from "./components/NotFound"
+import Spinner from "react-bootstrap/Spinner"
+import classes from "./App.module.css"
 
 function App() {
   const dispatch = useDispatch()
   const location = useLocation()
   const navigate = useNavigate()
   const [redirectPath, setRedirectPath] = useState(location.pathname)
+  const [loggingIn, setLoggingIn] = useState(false)
   const { sendRequest: verifyToken } = useAxios()
   const isAuth = useSelector((state) => state.auth.isAuth)
 
   const { pathname } = location
   useEffect(() => {
-    console.log("effect running", redirectPath)
     if (isAuth && redirectPath && pathname && redirectPath !== pathname) {
-      console.log("navigating")
       navigate(redirectPath, { replace: true })
       setRedirectPath(null)
     }
@@ -42,6 +43,7 @@ function App() {
     const token = localStorage.getItem("token")
     if (token) {
       ;(async () => {
+        setLoggingIn(true)
         try {
           const response = await verifyToken({
             url: "/users/verify",
@@ -55,6 +57,8 @@ function App() {
           }
         } catch (error) {
           localStorage.removeItem("token")
+        } finally {
+          setLoggingIn(false)
         }
       })()
     }
@@ -92,7 +96,17 @@ function App() {
     <>
       <MainNavbar />
       <Container>
-        <Routes>{routes}</Routes>
+        {!loggingIn && <Routes>{routes}</Routes>}
+        {loggingIn && (
+          <div className={classes.loggingInDiv}>
+            <p>Logging you in...</p>
+            <Spinner
+              animation="border"
+              role="status"
+              className={classes.spinner}
+            />
+          </div>
+        )}
       </Container>
     </>
   )

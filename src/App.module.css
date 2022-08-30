@@ -1,0 +1,15 @@
+.spinner {
+  margin-left: 20px;
+}
+
+.loggingInDiv {
+  display: flex;
+  font-size: 2rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  justify-content: center;
+  align-items: baseline;
+  width: 370px;
+}
