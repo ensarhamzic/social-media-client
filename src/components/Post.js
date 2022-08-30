@@ -13,6 +13,7 @@ import useAxios from "../hooks/use-axios"
 import Spinner from "react-bootstrap/Spinner"
 import ProfilePicture from "./ProfilePicture"
 import classes from "./Post.module.css"
+import Dropdown from "react-bootstrap/Dropdown"
 
 const Post = ({
   id,
@@ -127,9 +128,19 @@ const Post = ({
             </Link>
 
             {userId === authUser.id && (
-              <Button variant="danger" size="sm" onClick={deletePostHandler}>
-                Delete
-              </Button>
+              <Dropdown>
+                <Dropdown.Toggle
+                  variant="link"
+                  id="dropdown-basic"
+                  style={{ color: "black" }}
+                />
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={deletePostHandler}>
+                    Delete
+                  </Dropdown.Item>
+                  <Dropdown.Item>Edit</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             )}
           </div>
           <p style={{ fontSize: "1.3rem" }}>{text}</p>
