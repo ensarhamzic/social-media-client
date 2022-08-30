@@ -96,6 +96,13 @@ const Profile = ({ forAuthUser }) => {
     setUser({ ...user, followers: newFollowers })
   }
 
+  const removedFollowerHandler = () => {
+    const newFollowing = [...user.following]
+    const foundUserIndex = newFollowing.findIndex((f) => f.id === authUser.id)
+    if (foundUserIndex > -1) newFollowing.splice(foundUserIndex, 1)
+    setUser({ ...user, following: newFollowing })
+  }
+
   const postLikeHandler = (postId) => {
     const newPost = { ...posts.find((p) => p.id === postId) }
     const foundUserIndex = newPost.likes.findIndex((l) => l.id === authUser.id)
@@ -155,7 +162,11 @@ const Profile = ({ forAuthUser }) => {
         </p>
       )}
       {!userError && user && (
-        <UserDetails user={user} onFollowUnfollow={followUnfollowHandler} />
+        <UserDetails
+          user={user}
+          onFollowUnfollow={followUnfollowHandler}
+          onRemoveFollower={removedFollowerHandler}
+        />
       )}
       {!userError && user && (
         <UserPosts

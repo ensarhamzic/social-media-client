@@ -11,8 +11,10 @@ import Spinner from "react-bootstrap/Spinner"
 import { Link } from "react-router-dom"
 import classes from "./UserDetails.module.css"
 
-const UserDetails = ({ user, onFollowUnfollow }) => {
+const UserDetails = ({ user, onFollowUnfollow, onRemoveFollower }) => {
   const { isLoading, sendRequest: followUnfollow } = useAxios()
+  const { isLoading: isRemovingFollower, sendRequest: removeFollower } =
+    useAxios()
   const [modalShowed, showModal, hideModal, title] = useModal()
   const [usersListdata, setUsersListData] = useState([])
   const authUserId = useSelector((state) => state.auth.user.id)
@@ -45,6 +47,37 @@ const UserDetails = ({ user, onFollowUnfollow }) => {
         variant={`${isUserFollowing ? "light" : "primary"}`}
       >{`${isUserFollowing ? "Unfollow" : "Follow"}`}</Button>
       {isLoading && (
+        <Spinner
+          animation="border"
+          role="status"
+          style={{ marginLeft: "20px" }}
+        />
+      )}
+    </>
+  )
+
+  const removeFollowerHandler = async () => {
+    try {
+      const response = await removeFollower({
+        url: `/users/${user.id}/follow`,
+        method: "DELETE",
+        token,
+      })
+      if (!response.status) return
+      onRemoveFollower()
+    } catch {}
+  }
+
+  const removeFollowerButton = (
+    <>
+      <Button
+        onClick={removeFollowerHandler}
+        variant="danger"
+        style={{ marginLeft: "10px" }}
+      >
+        Remove follower
+      </Button>
+      {isRemovingFollower && (
         <Spinner
           animation="border"
           role="status"
@@ -101,6 +134,8 @@ const UserDetails = ({ user, onFollowUnfollow }) => {
             <div className="d-flex">
               {authUserId !== user.id && followButton}
               {authUserId === user.id && editProfileButton}
+              {user.following.find((f) => f.id === authUserId) &&
+                removeFollowerButton}
             </div>
           </div>
         </Card.Body>
