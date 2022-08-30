@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button"
 import { useSelector } from "react-redux"
 import { AiFillEye } from "react-icons/ai"
 import { AiFillEyeInvisible } from "react-icons/ai"
+import InputGroup from "react-bootstrap/InputGroup"
 
 const formReducer = (state, action) => {
   switch (action.type) {
@@ -263,7 +264,7 @@ const UpdateUserForm = ({ onFormSubmit, updateError }) => {
       </Form.Group>
       <Form.Group controlId="password" className="mt-1">
         <Form.Label>New Password</Form.Label>
-        <div className="d-flex align-items-center">
+        <InputGroup className="mb-3">
           <Form.Control
             type={!passwordVisible ? "password" : "text"}
             placeholder="Leave empty to not change"
@@ -272,19 +273,13 @@ const UpdateUserForm = ({ onFormSubmit, updateError }) => {
               dispatchForm({ type: "passwordChange", value: e.target.value })
             }
           />
-          <div
+          <InputGroup.Text
             onClick={passwordVisibilityToggler}
-            style={{
-              cursor: "pointer",
-              fontSize: "1.5rem",
-              paddingLeft: "10px",
-              textAlign: "center",
-              margin: "0",
-            }}
+            style={{ cursor: "pointer", fontSize: "1.3rem" }}
           >
             {passwordVisible ? <AiFillEyeInvisible /> : <AiFillEye />}
-          </div>
-        </div>
+          </InputGroup.Text>
+        </InputGroup>
         {formState.password.error && (
           <p className="text-danger">{formState.password.error}</p>
         )}

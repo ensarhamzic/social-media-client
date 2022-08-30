@@ -3,6 +3,7 @@ import { Button } from "react-bootstrap"
 import { Form } from "react-bootstrap"
 import { AiFillEye } from "react-icons/ai"
 import { AiFillEyeInvisible } from "react-icons/ai"
+import InputGroup from "react-bootstrap/InputGroup"
 
 const LoginForm = ({ onFormSubmit, loginError }) => {
   const [usernameError, setUsernameError] = useState(null)
@@ -55,25 +56,19 @@ const LoginForm = ({ onFormSubmit, loginError }) => {
       </Form.Group>
       <Form.Group controlId="password" className="mt-1">
         <Form.Label>Password</Form.Label>
-        <div className="d-flex align-items-center">
+        <InputGroup className="mb-3">
           <Form.Control
             type={!passwordVisible ? "password" : "text"}
             placeholder="Password"
             ref={passwordInputRef}
           />
-          <div
+          <InputGroup.Text
             onClick={passwordVisibilityToggler}
-            style={{
-              cursor: "pointer",
-              fontSize: "1.5rem",
-              paddingLeft: "10px",
-              textAlign: "center",
-              margin: "0",
-            }}
+            style={{ cursor: "pointer", fontSize: "1.3rem" }}
           >
             {passwordVisible ? <AiFillEyeInvisible /> : <AiFillEye />}
-          </div>
-        </div>
+          </InputGroup.Text>
+        </InputGroup>
         {passwordError && <p className="text-danger">{passwordError}</p>}
       </Form.Group>
       {loginError && <p className="text-danger">{loginError}</p>}
