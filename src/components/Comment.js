@@ -1,9 +1,9 @@
 import React from "react"
 import { Link } from "react-router-dom"
 import ProfilePicture from "./ProfilePicture"
-import Button from "react-bootstrap/Button"
 import { useSelector } from "react-redux"
 import classes from "./Comment.module.css"
+import Dropdown from "react-bootstrap/Dropdown"
 
 const Comment = ({ id, text, postUserId, user, onCommentDelete }) => {
   const authUserId = useSelector((state) => state.auth.user.id)
@@ -19,7 +19,7 @@ const Comment = ({ id, text, postUserId, user, onCommentDelete }) => {
         </Link>
       </div>
       <div className={classes.content}>
-        <div className="d-flex justify-content-between">
+        <div className="d-flex align-items-baseline">
           <Link
             to={`/profile/${user.id}`}
             style={{ color: "black", textDecoration: "none" }}
@@ -29,13 +29,18 @@ const Comment = ({ id, text, postUserId, user, onCommentDelete }) => {
             </p>
           </Link>
           {(user.id === authUserId || postUserId === authUserId) && (
-            <Button
-              variant="outline-danger"
-              size="sm"
-              onClick={deleteCommentHandler}
-            >
-              Delete
-            </Button>
+            <Dropdown style={{ marginLeft: "10px" }}>
+              <Dropdown.Toggle
+                variant="link"
+                id="dropdown-basic"
+                style={{ color: "black" }}
+              />
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={deleteCommentHandler}>
+                  Delete
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
           )}
         </div>
 
