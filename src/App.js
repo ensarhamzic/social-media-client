@@ -1,4 +1,11 @@
-import { Routes, Route, Navigate } from "react-router-dom"
+import { useState } from "react"
+import {
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+  useNavigate,
+} from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 import Login from "./pages/Login"
 import Home from "./pages/Home"
@@ -15,8 +22,21 @@ import NotFound from "./components/NotFound"
 
 function App() {
   const dispatch = useDispatch()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [redirectPath, setRedirectPath] = useState(location.pathname)
   const { sendRequest: verifyToken } = useAxios()
   const isAuth = useSelector((state) => state.auth.isAuth)
+
+  const { pathname } = location
+  useEffect(() => {
+    console.log("effect running", redirectPath)
+    if (isAuth && redirectPath && pathname && redirectPath !== pathname) {
+      console.log("navigating")
+      navigate(redirectPath, { replace: true })
+      setRedirectPath(null)
+    }
+  }, [redirectPath, navigate, pathname, isAuth])
 
   useEffect(() => {
     const token = localStorage.getItem("token")
