@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button"
 import { useSelector } from "react-redux"
 import classes from "./Comment.module.css"
 
-const Comment = ({ id, text, user, onCommentDelete }) => {
+const Comment = ({ id, text, postUserId, user, onCommentDelete }) => {
   const authUserId = useSelector((state) => state.auth.user.id)
 
   const deleteCommentHandler = () => {
@@ -28,7 +28,7 @@ const Comment = ({ id, text, user, onCommentDelete }) => {
               {user.username}
             </p>
           </Link>
-          {user.id === authUserId && (
+          {(user.id === authUserId || postUserId === authUserId) && (
             <Button
               variant="outline-danger"
               size="sm"

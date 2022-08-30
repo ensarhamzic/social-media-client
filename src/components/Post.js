@@ -264,6 +264,7 @@ const Post = ({
           {commmentsVisible && (
             <Comments
               comments={comments}
+              postUserId={userId}
               onCommentSubmit={commentSubmitHandler}
               onCommentDelete={commentDeleteHandler}
             />

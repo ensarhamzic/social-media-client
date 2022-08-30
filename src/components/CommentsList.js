@@ -1,7 +1,7 @@
 import React from "react"
 import Comment from "./Comment"
 
-const CommentsList = ({ comments, onCommentDelete }) => {
+const CommentsList = ({ comments, postUserId, onCommentDelete }) => {
   const commentDeleteHandler = (commentId) => {
     onCommentDelete(commentId)
   }
@@ -14,6 +14,7 @@ const CommentsList = ({ comments, onCommentDelete }) => {
             id={c.id}
             text={c.text}
             user={c.user}
+            postUserId={postUserId}
             onCommentDelete={commentDeleteHandler}
           />
         ))}

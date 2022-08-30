@@ -2,7 +2,12 @@ import React from "react"
 import NewCommentForm from "./NewCommentForm"
 import CommentsList from "./CommentsList"
 
-const Comments = ({ comments, onCommentSubmit, onCommentDelete }) => {
+const Comments = ({
+  comments,
+  postUserId,
+  onCommentSubmit,
+  onCommentDelete,
+}) => {
   const commentSubmitHandler = (commentText) => {
     onCommentSubmit(commentText)
   }
@@ -14,6 +19,7 @@ const Comments = ({ comments, onCommentSubmit, onCommentDelete }) => {
       <NewCommentForm onCommentSubmit={commentSubmitHandler} />
       <CommentsList
         comments={comments}
+        postUserId={postUserId}
         onCommentDelete={commentDeleteHandler}
       />
     </>
