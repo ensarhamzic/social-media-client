@@ -1,7 +1,6 @@
+import { useState } from "react"
 import Card from "react-bootstrap/Card"
 import RegisterForm from "../components/RegisterForm"
-import { useDispatch } from "react-redux"
-import { authActions } from "../store/auth-slice"
 import { LinkContainer } from "react-router-bootstrap"
 import useAxios from "../hooks/use-axios"
 import Spinner from "react-bootstrap/Spinner"
@@ -10,8 +9,8 @@ import classes from "./Login.module.css"
 
 const Register = () => {
   const { isLoading, error, sendRequest: register } = useAxios()
+  const [accountCreated, setAccountCreated] = useState(false)
   const token = useSelector((state) => state.auth.token)
-  const dispatch = useDispatch()
   const registerUserHandler = async (user) => {
     const response = await register({
       url: "/users/register",
@@ -20,26 +19,38 @@ const Register = () => {
       token,
     })
     if (response) {
-      const { token, user: newUserData } = response.data
-      dispatch(authActions.login({ token, user: newUserData }))
+      setAccountCreated(true)
     }
   }
   return (
-    <Card className={`mt-5 m-auto ${classes.card}`}>
-      <Card.Body>
-        <Card.Title>
-          Register as new user{" "}
-          {isLoading && <Spinner animation="border" role="status" size="sm" />}
-        </Card.Title>
-        <RegisterForm
-          onFormSubmit={registerUserHandler}
-          registerError={error}
-        />
-        <LinkContainer to="/login">
-          <Card.Link>Already have an account? Login here</Card.Link>
-        </LinkContainer>
-      </Card.Body>
-    </Card>
+    <>
+      {accountCreated && (
+        <Card className={`mt-5 m-auto ${classes.card}`}>
+          <Card.Body className="fw-bold" style={{ fontSize: "1.2rem" }}>
+            <p>Account successfully created!</p>
+            <p>Please check your email to confirm your account!</p>
+          </Card.Body>
+        </Card>
+      )}
+      <Card className={`mt-5 m-auto ${classes.card}`}>
+        <Card.Body>
+          <Card.Title>
+            Register as new user{" "}
+            {isLoading && (
+              <Spinner animation="border" role="status" size="sm" />
+            )}
+          </Card.Title>
+          <RegisterForm
+            onFormSubmit={registerUserHandler}
+            registerError={error}
+            accountCreated={accountCreated}
+          />
+          <LinkContainer to="/login">
+            <Card.Link>Already have an account? Login here</Card.Link>
+          </LinkContainer>
+        </Card.Body>
+      </Card>
+    </>
   )
 }
 

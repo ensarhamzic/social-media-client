@@ -21,6 +21,7 @@ import EditProfile from "./pages/EditProfile"
 import NotFound from "./components/NotFound"
 import Spinner from "react-bootstrap/Spinner"
 import classes from "./App.module.css"
+import VerifyAccount from "./pages/VerifyAccount"
 
 function App() {
   const dispatch = useDispatch()
@@ -38,6 +39,12 @@ function App() {
       setRedirectPath(null)
     }
   }, [redirectPath, navigate, pathname, isAuth])
+
+  const cancelRedirect = () => {
+    if (redirectPath) {
+      setRedirectPath(null)
+    }
+  }
 
   useEffect(() => {
     const token = localStorage.getItem("token")
@@ -73,7 +80,6 @@ function App() {
       <Route path="/profile" element={<Navigate to="/login" />} />
       <Route path="/profile/:id" element={<Navigate to="/login" />} />
       <Route path="/profile/edit" element={<Navigate to="/login" />} />
-      <Route path="*" element={<NotFound />} />
     </>
   )
 
@@ -87,7 +93,6 @@ function App() {
         <Route path="/profile" element={<Profile forAuthUser={true} />} />
         <Route path="/profile/:id" element={<Profile forAuthUser={false} />} />
         <Route path="/profile/edit" element={<EditProfile />} />
-        <Route path="*" element={<NotFound />} />
       </>
     )
   }
@@ -96,7 +101,16 @@ function App() {
     <>
       <MainNavbar />
       <Container>
-        {!loggingIn && <Routes>{routes}</Routes>}
+        {!loggingIn && (
+          <Routes>
+            {routes}
+            <Route
+              path="/verify/:confirmToken"
+              element={<VerifyAccount cancelRedirect={cancelRedirect} />}
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        )}
         {loggingIn && (
           <div className={classes.loggingInDiv}>
             <p>Logging you in...</p>

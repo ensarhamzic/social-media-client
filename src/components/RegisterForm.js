@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form"
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai"
 import InputGroup from "react-bootstrap/InputGroup"
 
-const RegisterForm = ({ onFormSubmit, registerError }) => {
+const RegisterForm = ({ onFormSubmit, registerError, accountCreated }) => {
   const [firstNameError, setFirstNameError] = useState(null)
   const [lastNameError, setLastNameError] = useState(null)
   const [emailError, setEmailError] = useState(null)
@@ -25,6 +25,17 @@ const RegisterForm = ({ onFormSubmit, registerError }) => {
   const usernameInputRef = useRef()
   const passwordInputRef = useRef()
   const confirmPasswordInputRef = useRef()
+
+  useEffect(() => {
+    if (accountCreated) {
+      firstNameInputRef.current.value = ""
+      lastNameInputRef.current.value = ""
+      emailInputRef.current.value = ""
+      usernameInputRef.current.value = ""
+      passwordInputRef.current.value = ""
+      confirmPasswordInputRef.current.value = ""
+    }
+  }, [accountCreated])
 
   const validateUserData = (userData) => {
     if (userData.firstName.trim() === "") setFirstNameError("Must not be empty")
