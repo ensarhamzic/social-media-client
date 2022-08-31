@@ -33,8 +33,14 @@ const EditProfile = () => {
         token,
       })
       const { token: userToken, user } = response.data
-      dispatch(authActions.login({ token: userToken, user }))
-      navigate("/profile")
+
+      if (userToken) {
+        dispatch(authActions.login({ token: userToken, user }))
+        navigate("/profile")
+      } else {
+        dispatch(authActions.logout())
+        navigate("/login", { replace: true })
+      }
     } catch {}
   }
 
