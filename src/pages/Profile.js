@@ -92,7 +92,13 @@ const Profile = ({ forAuthUser }) => {
     const newFollowers = [...user.followers]
     const foundUserIndex = newFollowers.findIndex((f) => f.id === authUser.id)
     if (foundUserIndex > -1) newFollowers.splice(foundUserIndex, 1)
-    else newFollowers.push(authUser)
+    else newFollowers.push({ ...authUser, accepted: false })
+    setUser({ ...user, followers: newFollowers })
+  }
+
+  const pendingFollowerRemoveHandler = (userId) => {
+    let newFollowers = [...user.followers]
+    newFollowers = newFollowers.filter((f) => f.id !== userId)
     setUser({ ...user, followers: newFollowers })
   }
 
@@ -101,6 +107,18 @@ const Profile = ({ forAuthUser }) => {
     const foundUserIndex = newFollowing.findIndex((f) => f.id === authUser.id)
     if (foundUserIndex > -1) newFollowing.splice(foundUserIndex, 1)
     setUser({ ...user, following: newFollowing })
+  }
+
+  const followerAcceptHandler = (userId) => {
+    let newFollowers = [...user.followers]
+    newFollowers = newFollowers.map((f) => {
+      if (f.id === userId) {
+        return { ...f, accepted: true }
+      } else {
+        return { ...f }
+      }
+    })
+    setUser({ ...user, followers: newFollowers })
   }
 
   const postLikeHandler = (postId) => {
@@ -166,6 +184,8 @@ const Profile = ({ forAuthUser }) => {
           user={user}
           onFollowUnfollow={followUnfollowHandler}
           onRemoveFollower={removedFollowerHandler}
+          onFollowerAccept={followerAcceptHandler}
+          onPendingFollowerRemove={pendingFollowerRemoveHandler}
         />
       )}
       {!userError && user && (

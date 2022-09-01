@@ -10,21 +10,43 @@ import useAxios from "../hooks/use-axios"
 import Spinner from "react-bootstrap/Spinner"
 import { Link } from "react-router-dom"
 import classes from "./UserDetails.module.css"
+import PendingFollowersList from "./PendingFollowersList"
 
-const UserDetails = ({ user, onFollowUnfollow, onRemoveFollower }) => {
+const UserDetails = ({
+  user,
+  onFollowUnfollow,
+  onRemoveFollower,
+  onFollowerAccept,
+  onPendingFollowerRemove,
+}) => {
   const { isLoading, sendRequest: followUnfollow } = useAxios()
   const { isLoading: isRemovingFollower, sendRequest: removeFollower } =
     useAxios()
   const [modalShowed, showModal, hideModal, title] = useModal()
+  const [pendingModalShowed, showPendingModal, hidePendingModal, pendingTitle] =
+    useModal()
   const [usersListdata, setUsersListData] = useState([])
   const authUserId = useSelector((state) => state.auth.user.id)
   const token = useSelector((state) => state.auth.token)
+
+  let acceptedFollowers = []
+  let pendingFollowers = []
+  user.followers.forEach((f) => {
+    if (f.accepted) {
+      acceptedFollowers.push(f)
+    } else {
+      pendingFollowers.push(f)
+    }
+  })
+
+  const acceptedFollowing = user.following.filter((f) => f.accepted === true)
+
   const followersClickHandler = () => {
-    setUsersListData(user.followers)
+    setUsersListData(acceptedFollowers)
     showModal(`${user.username}'s followers`)
   }
   const followingClickHandler = () => {
-    setUsersListData(user.following)
+    setUsersListData(acceptedFollowing)
     showModal(`${user.username} following`)
   }
 
@@ -39,13 +61,18 @@ const UserDetails = ({ user, onFollowUnfollow, onRemoveFollower }) => {
     } catch {}
   }
 
-  const isUserFollowing = user.followers.some((f) => f.id === authUserId)
+  const isUserFollowing = acceptedFollowers.some((f) => f.id === authUserId)
+  const isFollowPending = user.followers.some((f) => f.id === authUserId)
   const followButton = (
     <>
       <Button
         onClick={followUnfollowUserHandler}
-        variant={`${isUserFollowing ? "light" : "primary"}`}
-      >{`${isUserFollowing ? "Unfollow" : "Follow"}`}</Button>
+        variant={`${
+          isUserFollowing ? "light" : isFollowPending ? "secondary" : "primary"
+        }`}
+      >{`${
+        isUserFollowing ? "Unfollow" : isFollowPending ? "Pending" : "Follow"
+      }`}</Button>
       {isLoading && (
         <Spinner
           animation="border"
@@ -54,6 +81,20 @@ const UserDetails = ({ user, onFollowUnfollow, onRemoveFollower }) => {
         />
       )}
     </>
+  )
+
+  const pendingFollowersClick = () => {
+    showPendingModal("Pending followers")
+  }
+
+  const pendingFollowersButton = (
+    <Button
+      onClick={pendingFollowersClick}
+      variant="secondary"
+      style={{ marginLeft: "10px" }}
+    >
+      Pending Followers {pendingFollowers.length}
+    </Button>
   )
 
   const removeFollowerHandler = async () => {
@@ -95,12 +136,33 @@ const UserDetails = ({ user, onFollowUnfollow, onRemoveFollower }) => {
 
   const profileClickHandler = () => {
     hideModal()
+    hidePendingModal()
+  }
+
+  const followerAcceptHandler = (userId) => {
+    onFollowerAccept(userId)
+  }
+
+  const pendingFollowerRemoveHandler = (userId) => {
+    onPendingFollowerRemove(userId)
   }
 
   return (
     <>
       <MainModal show={modalShowed} onHide={hideModal} title={title}>
         <UsersList users={usersListdata} onProfileClick={profileClickHandler} />
+      </MainModal>
+      <MainModal
+        show={pendingModalShowed}
+        onHide={hidePendingModal}
+        title={pendingTitle}
+      >
+        <PendingFollowersList
+          users={pendingFollowers}
+          onProfileClick={profileClickHandler}
+          onFollowerAccept={followerAcceptHandler}
+          onPendingFollowerRemove={pendingFollowerRemoveHandler}
+        />
       </MainModal>
       <Card className={`mt-5 m-auto ${classes.card}`}>
         <Card.Body className="d-lg-flex m-lg-4">
@@ -120,7 +182,7 @@ const UserDetails = ({ user, onFollowUnfollow, onRemoveFollower }) => {
                 onClick={followersClickHandler}
               >
                 Followers:{" "}
-                <span className="fw-bold">{user.followers.length}</span>
+                <span className="fw-bold">{acceptedFollowers.length}</span>
               </p>
               <p
                 className="text-muted"
@@ -128,12 +190,15 @@ const UserDetails = ({ user, onFollowUnfollow, onRemoveFollower }) => {
                 onClick={followingClickHandler}
               >
                 Following:{" "}
-                <span className="fw-bold">{user.following.length}</span>
+                <span className="fw-bold">{acceptedFollowing.length}</span>
               </p>
             </div>
             <div className="d-flex">
               {authUserId !== user.id && followButton}
               {authUserId === user.id && editProfileButton}
+              {authUserId === user.id &&
+                pendingFollowers.length > 0 &&
+                pendingFollowersButton}
               {user.following.find((f) => f.id === authUserId) &&
                 removeFollowerButton}
             </div>
