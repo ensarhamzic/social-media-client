@@ -22,6 +22,8 @@ import NotFound from "./components/NotFound"
 import Spinner from "react-bootstrap/Spinner"
 import classes from "./App.module.css"
 import VerifyAccount from "./pages/VerifyAccount"
+import ResetPassword from "./components/ResetPassword"
+import ForgotPassword from "./components/ForgotPassword"
 
 function App() {
   const dispatch = useDispatch()
@@ -107,6 +109,11 @@ function App() {
             <Route
               path="/verify/:confirmToken"
               element={<VerifyAccount cancelRedirect={cancelRedirect} />}
+            />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route
+              path="/reset-password/:resetToken"
+              element={<ResetPassword cancelRedirect={cancelRedirect} />}
             />
             <Route path="*" element={<NotFound />} />
           </Routes>
