@@ -24,7 +24,6 @@ const LoginForm = ({ onFormSubmit, loginError }) => {
     if (password.length < 8)
       setPasswordError("Must be at least 8 characters long")
     else setPasswordError(null)
-
     setFormSubmitted(true)
   }
 

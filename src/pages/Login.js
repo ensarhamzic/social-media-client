@@ -10,6 +10,7 @@ import classes from "./Login.module.css"
 
 const Login = () => {
   const { isLoading, error, sendRequest: login } = useAxios()
+
   const token = useSelector((state) => state.auth.token)
 
   const dispatch = useDispatch()
@@ -34,9 +35,18 @@ const Login = () => {
           {isLoading && <Spinner animation="border" role="status" size="sm" />}
         </Card.Title>
         <LoginForm onFormSubmit={loginUserHandler} loginError={error} />
-        <LinkContainer to="/register">
-          <Card.Link>Don't have an account yet? Register here</Card.Link>
-        </LinkContainer>
+        <div className="mt-3">
+          <div>
+            <LinkContainer to="/forgot-password">
+              <Card.Link>Forgot password?</Card.Link>
+            </LinkContainer>
+          </div>
+          <div>
+            <LinkContainer to="/register">
+              <Card.Link>Don't have an account yet? Register here</Card.Link>
+            </LinkContainer>
+          </div>
+        </div>
       </Card.Body>
     </Card>
   )
