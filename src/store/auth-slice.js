@@ -10,6 +10,7 @@ const initialState = {
     username: null,
     email: null,
     pictureURL: null,
+    role: null,
   },
 }
 
@@ -20,7 +21,7 @@ const authSlice = createSlice({
     login: (state, action) => {
       state.token = action.payload.token
       state.isAuth = true
-      const { id, firstName, lastName, username, email, pictureURL } =
+      const { id, firstName, lastName, username, email, pictureURL, role } =
         action.payload.user
       state.user = {
         id,
@@ -29,6 +30,7 @@ const authSlice = createSlice({
         username,
         email,
         pictureURL,
+        role,
       }
       localStorage.setItem("token", action.payload.token)
     },
