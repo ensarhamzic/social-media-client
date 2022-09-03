@@ -22,7 +22,6 @@ const Login = () => {
       token,
     })
     if (response) {
-      console.log(response.data)
       const { token, user: userData } = response.data
       dispatch(authActions.login({ token, user: userData }))
     }

@@ -6,7 +6,7 @@ import classes from "./Comment.module.css"
 import Dropdown from "react-bootstrap/Dropdown"
 
 const Comment = ({ id, text, postUserId, user, onCommentDelete }) => {
-  const authUserId = useSelector((state) => state.auth.user.id)
+  const authUser = useSelector((state) => state.auth.user)
 
   const deleteCommentHandler = () => {
     onCommentDelete(id)
@@ -28,7 +28,9 @@ const Comment = ({ id, text, postUserId, user, onCommentDelete }) => {
               {user.username}
             </p>
           </Link>
-          {(user.id === authUserId || postUserId === authUserId) && (
+          {(user.id === authUser.id ||
+            postUserId === authUser.id ||
+            authUser.role === "Admin") && (
             <Dropdown style={{ marginLeft: "10px" }}>
               <Dropdown.Toggle
                 variant="link"

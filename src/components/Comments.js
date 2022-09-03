@@ -1,6 +1,7 @@
 import React from "react"
 import NewCommentForm from "./NewCommentForm"
 import CommentsList from "./CommentsList"
+import { useSelector } from "react-redux"
 
 const Comments = ({
   comments,
@@ -14,9 +15,12 @@ const Comments = ({
   const commentDeleteHandler = (commentId) => {
     onCommentDelete(commentId)
   }
+  const authUser = useSelector((state) => state.auth.user)
   return (
     <>
-      <NewCommentForm onCommentSubmit={commentSubmitHandler} />
+      {authUser.role === "User" && (
+        <NewCommentForm onCommentSubmit={commentSubmitHandler} />
+      )}
       <CommentsList
         comments={comments}
         postUserId={postUserId}

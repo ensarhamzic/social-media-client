@@ -176,7 +176,7 @@ const Post = ({
               </div>
             </Link>
 
-            {userId === authUser.id && (
+            {(userId === authUser.id || authUser.role === "Admin") && (
               <Dropdown>
                 <Dropdown.Toggle
                   variant="link"
@@ -187,9 +187,11 @@ const Post = ({
                   <Dropdown.Item onClick={deletePostHandler}>
                     Delete
                   </Dropdown.Item>
-                  <Dropdown.Item onClick={editPostClickHandler}>
-                    Edit
-                  </Dropdown.Item>
+                  {userId === authUser.id && (
+                    <Dropdown.Item onClick={editPostClickHandler}>
+                      Edit
+                    </Dropdown.Item>
+                  )}
                 </Dropdown.Menu>
               </Dropdown>
             )}
@@ -231,18 +233,20 @@ const Post = ({
           )}
 
           <div className={`d-flex w-100 fw-bold ${classes.controls}`}>
-            <div>
-              <span onClick={likesClickHandler} style={{ cursor: "pointer" }}>
-                {likes.length}{" "}
-              </span>
-              <span
-                onClick={likeUnlikePostHandler}
-                style={{ cursor: "pointer" }}
-                className={`${userLiked ? "text-primary" : ""}`}
-              >
-                <AiFillLike /> Like
-              </span>
-            </div>
+            {authUser.role === "User" && (
+              <div>
+                <span onClick={likesClickHandler} style={{ cursor: "pointer" }}>
+                  {likes.length}{" "}
+                </span>
+                <span
+                  onClick={likeUnlikePostHandler}
+                  style={{ cursor: "pointer" }}
+                  className={`${userLiked ? "text-primary" : ""}`}
+                >
+                  <AiFillLike /> Like
+                </span>
+              </div>
+            )}
             <div
               style={{ marginLeft: "25px", cursor: "pointer" }}
               onClick={commentsClickHandler}

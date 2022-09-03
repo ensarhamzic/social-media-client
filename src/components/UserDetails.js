@@ -26,7 +26,7 @@ const UserDetails = ({
   const [pendingModalShowed, showPendingModal, hidePendingModal, pendingTitle] =
     useModal()
   const [usersListdata, setUsersListData] = useState([])
-  const authUserId = useSelector((state) => state.auth.user.id)
+  const authUser = useSelector((state) => state.auth.user)
   const token = useSelector((state) => state.auth.token)
 
   let acceptedFollowers = []
@@ -61,8 +61,8 @@ const UserDetails = ({
     } catch {}
   }
 
-  const isUserFollowing = acceptedFollowers.some((f) => f.id === authUserId)
-  const isFollowPending = user.followers.some((f) => f.id === authUserId)
+  const isUserFollowing = acceptedFollowers.some((f) => f.id === authUser.id)
+  const isFollowPending = user.followers.some((f) => f.id === authUser.id)
   const followButton = (
     <>
       <Button
@@ -194,12 +194,14 @@ const UserDetails = ({
               </p>
             </div>
             <div className="d-flex">
-              {authUserId !== user.id && followButton}
-              {authUserId === user.id && editProfileButton}
-              {authUserId === user.id &&
+              {authUser.id !== user.id &&
+                authUser.role === "User" &&
+                followButton}
+              {authUser.id === user.id && editProfileButton}
+              {authUser.id === user.id &&
                 pendingFollowers.length > 0 &&
                 pendingFollowersButton}
-              {user.following.find((f) => f.id === authUserId) &&
+              {user.following.find((f) => f.id === authUser.id) &&
                 removeFollowerButton}
             </div>
           </div>
