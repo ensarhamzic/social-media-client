@@ -9,6 +9,7 @@ import {
 import { useSelector, useDispatch } from "react-redux"
 import Login from "./pages/Login"
 import Home from "./pages/Home"
+import Admin from "./pages/Admin"
 import MainNavbar from "./components/MainNavbar"
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css"
 import { Container } from "react-bootstrap"
@@ -33,6 +34,7 @@ function App() {
   const [loggingIn, setLoggingIn] = useState(false)
   const { sendRequest: verifyToken } = useAxios()
   const isAuth = useSelector((state) => state.auth.isAuth)
+  const authUser = useSelector((state) => state.auth.user)
 
   const { pathname } = location
   useEffect(() => {
@@ -93,6 +95,19 @@ function App() {
         <Route path="/register" element={<Navigate to="/profile" />} />
         <Route path="/home" element={<Home />} />
         <Route path="/profile" element={<Profile forAuthUser={true} />} />
+        <Route path="/profile/:id" element={<Profile forAuthUser={false} />} />
+        <Route path="/profile/edit" element={<EditProfile />} />
+      </>
+    )
+  }
+
+  if (authUser.role === "Admin") {
+    routes = (
+      <>
+        <Route path="/" element={<Navigate to="/admin" />} />
+        <Route path="/login" element={<Navigate to="/admin" />} />
+        <Route path="/register" element={<Navigate to="/admin" />} />
+        <Route path="/admin" element={<Admin />} />
         <Route path="/profile/:id" element={<Profile forAuthUser={false} />} />
         <Route path="/profile/edit" element={<EditProfile />} />
       </>

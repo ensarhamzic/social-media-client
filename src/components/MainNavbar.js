@@ -15,6 +15,7 @@ const MainNavbar = () => {
   const navigate = useNavigate()
   const isAuth = useSelector((state) => state.auth.isAuth)
   const dispatch = useDispatch()
+  const authUser = useSelector((state) => state.auth.user)
 
   const { pathname } = location
   useEffect(() => {
@@ -45,6 +46,23 @@ const MainNavbar = () => {
         </LinkContainer>
         <LinkContainer to="/profile">
           <Nav.Link>Profile</Nav.Link>
+        </LinkContainer>
+        <Button
+          onClick={logoutHandler}
+          variant="secondary"
+          className={classes.button}
+        >
+          Logout
+        </Button>
+      </>
+    )
+  }
+
+  if (authUser.role === "Admin") {
+    navLinks = (
+      <>
+        <LinkContainer to="/admin">
+          <Nav.Link>Admin</Nav.Link>
         </LinkContainer>
         <Button
           onClick={logoutHandler}
