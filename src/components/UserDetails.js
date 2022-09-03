@@ -11,6 +11,8 @@ import Spinner from "react-bootstrap/Spinner"
 import { Link } from "react-router-dom"
 import classes from "./UserDetails.module.css"
 import PendingFollowersList from "./PendingFollowersList"
+import DeleteProfileModal from "./DeleteProfileModal"
+import { useNavigate } from "react-router-dom"
 
 const UserDetails = ({
   user,
@@ -19,10 +21,17 @@ const UserDetails = ({
   onFollowerAccept,
   onPendingFollowerRemove,
 }) => {
+  const navigate = useNavigate()
   const { isLoading, sendRequest: followUnfollow } = useAxios()
   const { isLoading: isRemovingFollower, sendRequest: removeFollower } =
     useAxios()
   const [modalShowed, showModal, hideModal, title] = useModal()
+  const [
+    deleteModalShowed,
+    showDeleteModal,
+    hideDeleteModal,
+    deleteModalTitle,
+  ] = useModal()
   const [pendingModalShowed, showPendingModal, hidePendingModal, pendingTitle] =
     useModal()
   const [usersListdata, setUsersListData] = useState([])
@@ -134,6 +143,26 @@ const UserDetails = ({
     </Link>
   )
 
+  const deleteProfileButtonClick = () => {
+    showDeleteModal("Are you sure!")
+  }
+
+  const deleteProfileButton = (
+    <Button
+      variant="danger"
+      type="button"
+      onClick={deleteProfileButtonClick}
+      className="mt-3"
+      style={{ marginLeft: "10px" }}
+    >
+      Delete profile
+    </Button>
+  )
+
+  const deleteProfileHandler = () => {
+    navigate("/admin", { replace: true })
+  }
+
   const profileClickHandler = () => {
     hideModal()
     hidePendingModal()
@@ -164,6 +193,13 @@ const UserDetails = ({
           onPendingFollowerRemove={pendingFollowerRemoveHandler}
         />
       </MainModal>
+      <DeleteProfileModal
+        show={deleteModalShowed}
+        onHide={hideDeleteModal}
+        title={deleteModalTitle}
+        onDelete={deleteProfileHandler}
+        deleteUserId={user.id}
+      />
       <Card className={`mt-5 m-auto ${classes.card}`}>
         <Card.Body className="d-lg-flex m-lg-4">
           <div className={classes.userImage}>
@@ -203,6 +239,7 @@ const UserDetails = ({
                 pendingFollowersButton}
               {user.following.find((f) => f.id === authUser.id) &&
                 removeFollowerButton}
+              {authUser.role === "Admin" && deleteProfileButton}
             </div>
           </div>
         </Card.Body>

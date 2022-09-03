@@ -1,10 +1,13 @@
 import React, { useState, useReducer, useEffect } from "react"
 import Form from "react-bootstrap/Form"
 import Button from "react-bootstrap/Button"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { AiFillEye } from "react-icons/ai"
 import { AiFillEyeInvisible } from "react-icons/ai"
 import InputGroup from "react-bootstrap/InputGroup"
+import useModal from "../hooks/use-modal"
+import DeleteProfileModal from "./DeleteProfileModal"
+import { authActions } from "../store/auth-slice"
 
 const formReducer = (state, action) => {
   switch (action.type) {
@@ -120,6 +123,8 @@ const formReducer = (state, action) => {
 const UpdateUserForm = ({ onFormSubmit, updateError }) => {
   const authUser = useSelector((state) => state.auth.user)
   const [formSubmitted, setFormSubmitted] = useState(false)
+  const [modalShowed, showModal, hideModal, title] = useModal()
+  const dispatch = useDispatch()
   const initialState = {
     firstName: {
       value: authUser.firstName,
@@ -177,6 +182,10 @@ const UpdateUserForm = ({ onFormSubmit, updateError }) => {
     setPasswordVisible((prevState) => !prevState)
   }
 
+  const deleteProfileButtonClick = () => {
+    showModal("Are you sure?")
+  }
+
   useEffect(() => {
     if (formValid && formSubmitted) {
       const userData = {
@@ -204,124 +213,146 @@ const UpdateUserForm = ({ onFormSubmit, updateError }) => {
     deletePicture,
   ])
 
+  const onDeleteProfileHandler = () => {
+    dispatch(authActions.logout())
+  }
+
   return (
-    <Form onSubmit={formSubmitHandler}>
-      <Form.Group controlId="firstName" className="mt-1">
-        <Form.Label>First name</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="First name"
-          value={formState.firstName.value}
-          onChange={(e) =>
-            dispatchForm({ type: "firstNameChange", value: e.target.value })
-          }
-        />
-        {formState.firstName.error && (
-          <p className="text-danger">{formState.firstName.error}</p>
-        )}
-      </Form.Group>
-      <Form.Group controlId="lastName" className="mt-1">
-        <Form.Label>Last name</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Last name"
-          value={formState.lastName.value}
-          onChange={(e) =>
-            dispatchForm({ type: "lastNameChange", value: e.target.value })
-          }
-        />
-        {formState.lastName.error && (
-          <p className="text-danger">{formState.lastName.error}</p>
-        )}
-      </Form.Group>
-      <Form.Group controlId="email" className="mt-1">
-        <Form.Label>Email address</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Enter email"
-          value={formState.email.value}
-          onChange={(e) =>
-            dispatchForm({ type: "emailChange", value: e.target.value })
-          }
-        />
-        {formState.email.error && (
-          <p className="text-danger">{formState.email.error}</p>
-        )}
-      </Form.Group>
-      <Form.Group controlId="username" className="mt-1">
-        <Form.Label>Username</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Username"
-          value={formState.username.value}
-          onChange={(e) =>
-            dispatchForm({ type: "usernameChange", value: e.target.value })
-          }
-        />
-        {formState.username.error && (
-          <p className="text-danger">{formState.username.error}</p>
-        )}
-      </Form.Group>
-      <Form.Group controlId="password" className="mt-1">
-        <Form.Label>New Password</Form.Label>
-        <InputGroup className="mb-3">
+    <>
+      <DeleteProfileModal
+        show={modalShowed}
+        onHide={hideModal}
+        title={title}
+        onDelete={onDeleteProfileHandler}
+        deleteUserId={authUser.id}
+      />
+      <Form onSubmit={formSubmitHandler}>
+        <Form.Group controlId="firstName" className="mt-1">
+          <Form.Label>First name</Form.Label>
           <Form.Control
-            type={!passwordVisible ? "password" : "text"}
-            placeholder="Leave empty to not change"
-            value={formState.password.value}
+            type="text"
+            placeholder="First name"
+            value={formState.firstName.value}
             onChange={(e) =>
-              dispatchForm({ type: "passwordChange", value: e.target.value })
+              dispatchForm({ type: "firstNameChange", value: e.target.value })
             }
           />
-          <InputGroup.Text
-            onClick={passwordVisibilityToggler}
-            style={{ cursor: "pointer", fontSize: "1.3rem" }}
-          >
-            {passwordVisible ? <AiFillEyeInvisible /> : <AiFillEye />}
-          </InputGroup.Text>
-        </InputGroup>
-        {formState.password.error && (
-          <p className="text-danger">{formState.password.error}</p>
-        )}
-      </Form.Group>
-      {authUser.pictureURL && (
-        <Form.Group controlId="profilePicture" className="mt-3">
-          <Form.Check
-            type="checkbox"
-            id="checkbox"
-            label="Delete current profile picture"
-            checked={formState.deletePicture.value}
-            onChange={(e) =>
-              dispatchForm({
-                type: "deletePictureChange",
-                value: e.target.checked,
-              })
-            }
-          />
-        </Form.Group>
-      )}
-      {!deletePicture && (
-        <Form.Group controlId="profilePicture" className="mt-1">
-          <Form.Label>New Profile Picture</Form.Label>
-          <Form.Control
-            type="file"
-            onChange={(e) =>
-              dispatchForm({
-                type: "profilePictureChange",
-                value: e.target.files[0],
-              })
-            }
-          />
-          {formState.profilePicture.error && (
-            <p className="text-danger">{formState.profilePicture.error}</p>
+          {formState.firstName.error && (
+            <p className="text-danger">{formState.firstName.error}</p>
           )}
         </Form.Group>
-      )}
-      {updateError && <p className="text-danger">{updateError}</p>}
-      <Button variant="primary" type="submit" className="mt-3">
-        Update Profile
-      </Button>
-    </Form>
+        <Form.Group controlId="lastName" className="mt-1">
+          <Form.Label>Last name</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Last name"
+            value={formState.lastName.value}
+            onChange={(e) =>
+              dispatchForm({ type: "lastNameChange", value: e.target.value })
+            }
+          />
+          {formState.lastName.error && (
+            <p className="text-danger">{formState.lastName.error}</p>
+          )}
+        </Form.Group>
+        <Form.Group controlId="email" className="mt-1">
+          <Form.Label>Email address</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter email"
+            value={formState.email.value}
+            onChange={(e) =>
+              dispatchForm({ type: "emailChange", value: e.target.value })
+            }
+          />
+          {formState.email.error && (
+            <p className="text-danger">{formState.email.error}</p>
+          )}
+        </Form.Group>
+        <Form.Group controlId="username" className="mt-1">
+          <Form.Label>Username</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Username"
+            value={formState.username.value}
+            onChange={(e) =>
+              dispatchForm({ type: "usernameChange", value: e.target.value })
+            }
+          />
+          {formState.username.error && (
+            <p className="text-danger">{formState.username.error}</p>
+          )}
+        </Form.Group>
+        <Form.Group controlId="password" className="mt-1">
+          <Form.Label>New Password</Form.Label>
+          <InputGroup className="mb-3">
+            <Form.Control
+              type={!passwordVisible ? "password" : "text"}
+              placeholder="Leave empty to not change"
+              value={formState.password.value}
+              onChange={(e) =>
+                dispatchForm({ type: "passwordChange", value: e.target.value })
+              }
+            />
+            <InputGroup.Text
+              onClick={passwordVisibilityToggler}
+              style={{ cursor: "pointer", fontSize: "1.3rem" }}
+            >
+              {passwordVisible ? <AiFillEyeInvisible /> : <AiFillEye />}
+            </InputGroup.Text>
+          </InputGroup>
+          {formState.password.error && (
+            <p className="text-danger">{formState.password.error}</p>
+          )}
+        </Form.Group>
+        {authUser.pictureURL && (
+          <Form.Group controlId="profilePicture" className="mt-3">
+            <Form.Check
+              type="checkbox"
+              id="checkbox"
+              label="Delete current profile picture"
+              checked={formState.deletePicture.value}
+              onChange={(e) =>
+                dispatchForm({
+                  type: "deletePictureChange",
+                  value: e.target.checked,
+                })
+              }
+            />
+          </Form.Group>
+        )}
+        {!deletePicture && (
+          <Form.Group controlId="profilePicture" className="mt-1">
+            <Form.Label>New Profile Picture</Form.Label>
+            <Form.Control
+              type="file"
+              onChange={(e) =>
+                dispatchForm({
+                  type: "profilePictureChange",
+                  value: e.target.files[0],
+                })
+              }
+            />
+            {formState.profilePicture.error && (
+              <p className="text-danger">{formState.profilePicture.error}</p>
+            )}
+          </Form.Group>
+        )}
+        {updateError && <p className="text-danger">{updateError}</p>}
+        <Button variant="primary" type="submit" className="mt-3">
+          Update Profile
+        </Button>
+        <Button
+          variant="danger"
+          type="button"
+          onClick={deleteProfileButtonClick}
+          className="mt-3"
+          style={{ marginLeft: "10px" }}
+        >
+          Delete profile
+        </Button>
+      </Form>
+    </>
   )
 }
 
