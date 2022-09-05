@@ -1,7 +1,7 @@
 import React from "react"
 import Card from "react-bootstrap/Card"
 import NewPostForm from "./NewPostForm"
-import { useSelector } from "react-redux/es/exports"
+import { useSelector } from "react-redux"
 import useAxios from "../hooks/use-axios"
 import PostsList from "./PostsList"
 import classes from "./UserPosts.module.css"

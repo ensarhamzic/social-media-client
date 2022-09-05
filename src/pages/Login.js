@@ -38,12 +38,14 @@ const Login = () => {
         <div className="mt-3">
           <div>
             <LinkContainer to="/forgot-password">
-              <Card.Link>Forgot password?</Card.Link>
+              <Card.Link href="#">Forgot password?</Card.Link>
             </LinkContainer>
           </div>
           <div>
             <LinkContainer to="/register">
-              <Card.Link>Don't have an account yet? Register here</Card.Link>
+              <Card.Link href="#">
+                Don't have an account yet? Register here
+              </Card.Link>
             </LinkContainer>
           </div>
         </div>
