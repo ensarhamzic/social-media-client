@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 import useAxios from "../hooks/use-axios"
 import classes from "./PendingUser.module.css"
 import ProfilePicture from "./ProfilePicture"
-import { useSelector } from "react-redux/es/hooks/useSelector"
+import { useSelector } from "react-redux"
 import Spinner from "react-bootstrap/Spinner"
 
 const PendingUser = ({

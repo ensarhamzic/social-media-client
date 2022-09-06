@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import Card from "react-bootstrap/Card"
 import ProfilePicture from "./ProfilePicture"
-import { useSelector } from "react-redux/es/exports"
 import UsersList from "./UsersList"
 import MainModal from "./MainModal"
 import Button from "react-bootstrap/Button"
@@ -13,6 +12,7 @@ import classes from "./UserDetails.module.css"
 import PendingFollowersList from "./PendingFollowersList"
 import DeleteProfileModal from "./DeleteProfileModal"
 import { useNavigate } from "react-router-dom"
+import { useSelector } from "react-redux"
 
 const UserDetails = ({
   user,
