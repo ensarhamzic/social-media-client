@@ -229,7 +229,7 @@ const UserDetails = ({
                 <span className="fw-bold">{acceptedFollowing.length}</span>
               </p>
             </div>
-            <div className="d-flex">
+            <div className={classes.actions}>
               {authUser.id !== user.id &&
                 authUser.role === "User" &&
                 followButton}

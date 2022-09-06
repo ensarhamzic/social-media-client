@@ -17,6 +17,10 @@
   margin-left: 10px;
 }
 
+.innerContent {
+  display: flex;
+}
+
 @media only screen and (max-width: 991px) {
   .content {
     margin: 0;
@@ -29,5 +33,18 @@
 
   .username {
     font-size: 1rem;
+  }
+}
+
+@media only screen and (max-width: 550px) {
+  .innerContent {
+    display: unset;
+  }
+
+  .innerContent button {
+    margin-top: 10px;
+  }
+  .innerContent button:first-of-type {
+    margin-left: 20px;
   }
 }

@@ -6,6 +6,9 @@
   margin-left: 50px;
 }
 
+.actions {
+  display: flex;
+}
 @media only screen and (max-width: 991px) {
   .card {
     width: 85%;
@@ -20,5 +23,17 @@
 
   .userImage {
     text-align: center;
+  }
+
+  .actions {
+    display: unset;
+  }
+
+  .actions button {
+    margin-top: 10px;
+  }
+
+  .actions a {
+    margin-top: 10px;
   }
 }

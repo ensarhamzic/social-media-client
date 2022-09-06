@@ -61,39 +61,43 @@ const PendingUser = ({
             <ProfilePicture pictureURL={user.pictureURL} width={60} />{" "}
           </Link>
         </div>
-        <div
-          style={{
-            marginLeft: "25px",
-          }}
-        >
-          <Link
-            to={`/profile/${user.id}`}
-            onClick={profileLinkClickHandler}
-            style={{ color: "black", textDecoration: "none" }}
+        <div className={classes.innerContent}>
+          <div
+            style={{
+              marginLeft: "25px",
+            }}
           >
-            <p className={classes.fullName}>
-              {user.firstName} {user.lastName}
-            </p>
-            <p className={classes.username}>username: {user.username}</p>{" "}
-          </Link>
-        </div>
-        <div className="align-self-center">
-          <Button
-            variant="primary"
-            className={classes.actionButton}
-            onClick={acceptFollowerHandler}
-          >
-            Accept
-          </Button>
-          {accepting && <Spinner animation="border" role="status" size="sm" />}
-          <Button
-            variant="danger"
-            className={classes.actionButton}
-            onClick={removeFollowerHandler}
-          >
-            Remove
-          </Button>
-          {removing && <Spinner animation="border" role="status" size="sm" />}
+            <Link
+              to={`/profile/${user.id}`}
+              onClick={profileLinkClickHandler}
+              style={{ color: "black", textDecoration: "none" }}
+            >
+              <p className={classes.fullName}>
+                {user.firstName} {user.lastName}
+              </p>
+              <p className={classes.username}>username: {user.username}</p>{" "}
+            </Link>
+          </div>
+          <div className="align-self-center">
+            <Button
+              variant="primary"
+              className={classes.actionButton}
+              onClick={acceptFollowerHandler}
+            >
+              Accept
+            </Button>
+            {accepting && (
+              <Spinner animation="border" role="status" size="sm" />
+            )}
+            <Button
+              variant="danger"
+              className={classes.actionButton}
+              onClick={removeFollowerHandler}
+            >
+              Remove
+            </Button>
+            {removing && <Spinner animation="border" role="status" size="sm" />}
+          </div>
         </div>
       </div>
     </>
