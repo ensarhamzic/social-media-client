@@ -25,8 +25,12 @@ import classes from "./App.module.css"
 import VerifyAccount from "./pages/VerifyAccount"
 import ResetPassword from "./components/ResetPassword"
 import ForgotPassword from "./components/ForgotPassword"
+import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr"
+
+const API_URL = process.env.REACT_APP_API_URL
 
 function App() {
+  const [connection, setConnection] = useState(null)
   const dispatch = useDispatch()
   const location = useLocation()
   const navigate = useNavigate()
@@ -35,6 +39,7 @@ function App() {
   const { sendRequest: verifyToken } = useAxios()
   const isAuth = useSelector((state) => state.auth.isAuth)
   const authUser = useSelector((state) => state.auth.user)
+  const token = useSelector((state) => state.auth.token)
 
   const { pathname } = location
   useEffect(() => {
@@ -74,6 +79,32 @@ function App() {
       })()
     }
   }, [dispatch, verifyToken])
+
+  useEffect(() => {
+    ;(async () => {
+      if (isAuth) {
+        try {
+          const connection = new HubConnectionBuilder()
+            .withUrl(`${API_URL}/hubs/chat`, {
+              accessTokenFactory: () => token,
+            })
+            .configureLogging(LogLevel.Information)
+            .build()
+
+          connection.on("ReceiveMessage", (userId, message) => {
+            console.log(userId, message)
+          })
+
+          await connection.start()
+          await connection.invoke("JoinChat")
+
+          setConnection(connection)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+    })()
+  }, [isAuth, token, dispatch])
 
   let routes = (
     <>
