@@ -1,0 +1,47 @@
+.closedWrapper {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  font-size: 1.5rem;
+  border: 3px solid #4d4d4d;
+  color: #4d4d4d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 200ms;
+}
+
+.closedWrapper:hover {
+  background-color: #4d4d4d;
+  color: white;
+}
+
+.card {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 1.5rem;
+  border: 1px solid #d2d2d2;
+  color: #4d4d4d;
+  width: 500px;
+  min-height: 500px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header svg {
+  font-size: 1.8rem;
+  cursor: pointer;
+  transition: all 200ms;
+}
+
+.header svg:hover {
+  color: rgb(247, 81, 81);
+}

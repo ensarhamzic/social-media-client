@@ -4,11 +4,15 @@ import { useSelector } from "react-redux"
 import useAxios from "../hooks/use-axios"
 import UsersList from "./UsersList"
 
-const SearchUsers = () => {
+const SearchUsers = ({ chatMode = false, onProfileClick }) => {
   const token = useSelector((state) => state.auth.token)
   const [users, setUsers] = useState([])
   const [searchString, setSearchString] = useState("")
   const { sendRequest: searchUsers } = useAxios()
+
+  const profileClickHandler = (user) => {
+    onProfileClick && onProfileClick(user)
+  }
 
   useEffect(() => {
     if (searchString.length >= 3 && token) {
@@ -34,7 +38,11 @@ const SearchUsers = () => {
         onChange={(e) => setSearchString(e.target.value)}
       />
 
-      <UsersList users={users} />
+      <UsersList
+        users={users}
+        chatMode={chatMode}
+        onProfileClick={profileClickHandler}
+      />
     </div>
   )
 }

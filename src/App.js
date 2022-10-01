@@ -26,6 +26,7 @@ import VerifyAccount from "./pages/VerifyAccount"
 import ResetPassword from "./components/ResetPassword"
 import ForgotPassword from "./components/ForgotPassword"
 import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr"
+import Chat from "./components/Chat"
 
 const API_URL = process.env.REACT_APP_API_URL
 
@@ -175,6 +176,7 @@ function App() {
           </div>
         )}
       </Container>
+      {isAuth && <Chat />}
     </>
   )
 }
