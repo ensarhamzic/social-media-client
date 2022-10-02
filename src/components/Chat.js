@@ -8,6 +8,9 @@ import SearchUsers from "./SearchUsers"
 import useAxios from "../hooks/use-axios"
 import { useSelector, useDispatch } from "react-redux"
 import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr"
+import Messages from "./Messages"
+import Spinner from "react-bootstrap/Spinner"
+import { Form } from "react-bootstrap"
 
 const API_URL = process.env.REACT_APP_API_URL
 
@@ -19,6 +22,12 @@ const Chat = () => {
   const { isLoading: messagesLoading, sendRequest: getMessages } = useAxios()
   const token = useSelector((state) => state.auth.token)
   const isAuth = useSelector((state) => state.auth.isAuth)
+
+  const [newMessage, setNewMessage] = useState("")
+
+  const newMessageSubmit = async (e) => {
+    e.preventDefault()
+  }
 
   useEffect(() => {
     ;(async () => {
@@ -59,6 +68,7 @@ const Chat = () => {
     )
 
   const profileClickHandler = async (user) => {
+    setChattingUser({ ...user, messages: [] })
     const response = await getMessages({
       url: `/messages/${user.id}`,
       method: "GET",
@@ -67,10 +77,10 @@ const Chat = () => {
 
     if (!response.status) return
 
-    setChattingUser({ ...user, messages: response.data })
+    setChattingUser((prevUser) => {
+      return { ...prevUser, messages: response.data }
+    })
   }
-
-  console.log(chattingUser)
 
   return (
     <Card className={`mt-5 mb-5 m-auto ${classes.card}`}>
@@ -99,6 +109,30 @@ const Chat = () => {
       <Card.Body>
         {!chattingUser && (
           <SearchUsers chatMode={true} onProfileClick={profileClickHandler} />
+        )}
+        {chattingUser && (
+          <>
+            {messagesLoading && (
+              <div className={classes.spinner}>
+                <Spinner animation="border" role="status" />
+              </div>
+            )}
+            {!messagesLoading && (
+              <div className={classes.chattingWrapper}>
+                <Messages messages={chattingUser.messages} />
+                <Form onSubmit={newMessageSubmit}>
+                  <Form.Control
+                    type="text"
+                    value={newMessage}
+                    onChange={(e) => {
+                      setNewMessage(e.target.value)
+                    }}
+                    placeholder="Type message"
+                  />
+                </Form>
+              </div>
+            )}
+          </>
         )}
       </Card.Body>
     </Card>

@@ -27,7 +27,7 @@
   border: 1px solid #d2d2d2;
   color: #4d4d4d;
   width: 500px;
-  min-height: 500px;
+  height: 500px;
 }
 
 .header {
@@ -44,4 +44,17 @@
 
 .header svg:hover {
   color: rgb(247, 81, 81);
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.chattingWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }

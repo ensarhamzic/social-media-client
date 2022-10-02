@@ -1,0 +1,8 @@
+.noMessages {
+  text-align: center;
+}
+
+.messages,
+.noMessages {
+  flex-grow: 1;
+}
