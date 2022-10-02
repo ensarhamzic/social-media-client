@@ -22,38 +22,65 @@ const Chat = () => {
   const { isLoading: messagesLoading, sendRequest: getMessages } = useAxios()
   const token = useSelector((state) => state.auth.token)
   const isAuth = useSelector((state) => state.auth.isAuth)
+  const authUserId = useSelector((state) => state.auth.user.id)
 
   const [newMessage, setNewMessage] = useState("")
 
   const newMessageSubmit = async (e) => {
     e.preventDefault()
+    if (!newMessage.trim()) return
+    await connection.invoke("SendMessage", {
+      message: newMessage,
+      to: chattingUser.id,
+    })
+
+    setNewMessage("")
   }
 
   useEffect(() => {
+    if (connection) return
     ;(async () => {
       if (isAuth) {
         try {
-          const connection = new HubConnectionBuilder()
+          const con = new HubConnectionBuilder()
             .withUrl(`${API_URL}/hubs/chat`, {
               accessTokenFactory: () => token,
             })
             .configureLogging(LogLevel.Information)
             .build()
 
-          connection.on("ReceiveMessage", (userId, message) => {
-            console.log(userId, message)
-          })
+          await con.start()
+          await con.invoke("JoinChat")
 
-          await connection.start()
-          await connection.invoke("JoinChat")
-
-          setConnection(connection)
+          setConnection(con)
         } catch (error) {
           console.log(error)
         }
       }
     })()
-  }, [isAuth, token, dispatch])
+  }, [isAuth, token, dispatch, connection])
+
+  useEffect(() => {
+    if (!connection) return
+
+    connection.off("ReceiveMessage")
+
+    const handler = (user, message) => {
+      if (
+        (message.fromUserId === authUserId &&
+          message.toUserId === chattingUser?.id) ||
+        (message.fromUserId === chattingUser?.id &&
+          message.toUserId === authUserId)
+      ) {
+        const newMessages = [...chattingUser.messages]
+        newMessages.push(message)
+        setChattingUser((prevUser) => {
+          return { ...prevUser, messages: newMessages }
+        })
+      }
+    }
+    connection.on("ReceiveMessage", handler)
+  }, [authUserId, chattingUser, connection])
 
   if (!opened)
     return (

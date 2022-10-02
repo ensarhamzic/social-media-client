@@ -6,3 +6,9 @@
 .noMessages {
   flex-grow: 1;
 }
+
+.messages {
+  overflow-y: auto;
+  height: 0px;
+  margin-bottom: 10px;
+}

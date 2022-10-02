@@ -1,10 +1,12 @@
 .message {
-  width: 150px;
+  width: auto;
+  max-width: 250px;
   border: 1px solid black;
   border-radius: 10px;
   margin-top: 10px;
-  padding: 5px;
+  padding: 5px 10px;
   font-size: 1.2rem;
+  align-self: flex-start;
 }
 
 .sentMessage {
