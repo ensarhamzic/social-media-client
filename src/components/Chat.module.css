@@ -58,3 +58,20 @@
   flex-direction: column;
   height: 100%;
 }
+
+.recent {
+  flex-grow: 1;
+  overflow-y: auto;
+  height: 0px;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+}
+
+.searchResults {
+  flex-grow: 1;
+  overflow-y: auto;
+  height: 0px;
+}

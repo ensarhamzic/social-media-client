@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { BsFillChatTextFill } from "react-icons/bs"
-import { AiOutlineCloseCircle } from "react-icons/ai"
+import { AiOutlineCloseCircle, AiOutlineSearch } from "react-icons/ai"
 import { MdOutlineArrowBackIosNew } from "react-icons/md"
+import { TbSearchOff } from "react-icons/tb"
 import Card from "react-bootstrap/Card"
 import classes from "./Chat.module.css"
 import SearchUsers from "./SearchUsers"
@@ -11,6 +12,7 @@ import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr"
 import Messages from "./Messages"
 import Spinner from "react-bootstrap/Spinner"
 import { Form } from "react-bootstrap"
+import UsersList from "./UsersList"
 
 const API_URL = process.env.REACT_APP_API_URL
 
@@ -18,8 +20,11 @@ const Chat = () => {
   const dispatch = useDispatch()
   const [opened, setOpened] = useState(false)
   const [connection, setConnection] = useState(null)
+  const [chatUsers, setChatUsers] = useState(null)
   const [chattingUser, setChattingUser] = useState(null)
+  const [search, setSearch] = useState(false)
   const { isLoading: messagesLoading, sendRequest: getMessages } = useAxios()
+  const { isLoading: chatsLoading, sendRequest: getChats } = useAxios()
   const token = useSelector((state) => state.auth.token)
   const isAuth = useSelector((state) => state.auth.isAuth)
   const authUserId = useSelector((state) => state.auth.user.id)
@@ -59,6 +64,20 @@ const Chat = () => {
       }
     })()
   }, [isAuth, token, dispatch, connection])
+
+  useEffect(() => {
+    ;(async () => {
+      const response = await getChats({
+        url: "/messages/chats",
+        method: "GET",
+        token,
+      })
+
+      if (!response) return
+
+      setChatUsers(response.data)
+    })()
+  }, [getChats, token])
 
   useEffect(() => {
     if (!connection) return
@@ -115,11 +134,27 @@ const Chat = () => {
         {!chattingUser && (
           <>
             <div>Chat</div>
-            <AiOutlineCloseCircle
-              onClick={() => {
-                setOpened(false)
-              }}
-            />
+            <div>
+              {!search && (
+                <AiOutlineSearch
+                  onClick={() => {
+                    setSearch(true)
+                  }}
+                />
+              )}
+              {search && (
+                <TbSearchOff
+                  onClick={() => {
+                    setSearch(false)
+                  }}
+                />
+              )}
+              <AiOutlineCloseCircle
+                onClick={() => {
+                  setOpened(false)
+                }}
+              />
+            </div>
           </>
         )}
         {chattingUser && (
@@ -133,9 +168,12 @@ const Chat = () => {
           </>
         )}
       </Card.Header>
-      <Card.Body>
-        {!chattingUser && (
-          <SearchUsers chatMode={true} onProfileClick={profileClickHandler} />
+      <Card.Body className={classes.cardBody}>
+        {!chattingUser && search && (
+          <div className={classes.searchResults}>
+            <SearchUsers chatMode={true} onProfileClick={profileClickHandler} />
+            <hr />
+          </div>
         )}
         {chattingUser && (
           <>
@@ -160,6 +198,17 @@ const Chat = () => {
               </div>
             )}
           </>
+        )}
+
+        {!chattingUser && chatUsers && !search && (
+          <div className={classes.recent}>
+            <p>Recent chats</p>
+            <UsersList
+              users={chatUsers}
+              chatMode={true}
+              onProfileClick={profileClickHandler}
+            />
+          </div>
         )}
       </Card.Body>
     </Card>
