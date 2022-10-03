@@ -99,11 +99,12 @@ const Chat = () => {
         })
         connection.invoke("SeenMessages", chattingUser.id)
       } else if (chatUsers.some((u) => u.id === user.id)) {
+        console.log("sad")
         const chats = [...chatUsers]
         chats.find((c) => c.id === user.id).newChat = true
         setChatUsers(chats)
       } else {
-        setChatUsers((prevUsers) => [...prevUsers, { ...user, new: true }])
+        setChatUsers((prevUsers) => [...prevUsers, { ...user, newChat: true }])
       }
     })
   }, [authUserId, chattingUser, connection, chatUsers])
