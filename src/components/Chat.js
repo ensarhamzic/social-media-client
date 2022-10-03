@@ -20,7 +20,7 @@ const Chat = () => {
   const dispatch = useDispatch()
   const [opened, setOpened] = useState(false)
   const [connection, setConnection] = useState(null)
-  const [chatUsers, setChatUsers] = useState(null)
+  const [chatUsers, setChatUsers] = useState([])
   const [chattingUser, setChattingUser] = useState(null)
   const [search, setSearch] = useState(false)
   const { isLoading: messagesLoading, sendRequest: getMessages } = useAxios()
@@ -75,7 +75,10 @@ const Chat = () => {
 
       if (!response) return
 
-      setChatUsers(response.data)
+      const users = response.data.map((u) => {
+        return { ...u, new: false }
+      })
+      setChatUsers(users)
     })()
   }, [getChats, token])
 
@@ -97,9 +100,13 @@ const Chat = () => {
         setChattingUser((prevUser) => {
           return { ...prevUser, messages: newMessages }
         })
+        connection.invoke("SeenMessages", chattingUser.id)
       } else if (chatUsers.some((u) => u.id === user.id)) {
+        const chats = [...chatUsers]
+        chats.find((c) => c.id === user.id).new = true
+        setChatUsers(chats)
       } else {
-        setChatUsers((prevUsers) => [...prevUsers, user])
+        setChatUsers((prevUsers) => [...prevUsers, { ...user, new: true }])
       }
     })
   }, [authUserId, chattingUser, connection, chatUsers])
@@ -129,8 +136,19 @@ const Chat = () => {
     setChattingUser((prevUser) => {
       return { ...prevUser, messages: response.data }
     })
+
+    const newChatUsers = [...chatUsers]
+    const foundChatUser = newChatUsers.find((u) => u.id === user.id)
+    if (foundChatUser) {
+      foundChatUser.new = false
+      setChatUsers(newChatUsers)
+    }
+
+    connection.invoke("SeenMessages", user.id)
   }
 
+  const newChatUsers = chatUsers.filter((u) => u.new)
+  const oldChatUsers = chatUsers.filter((u) => !u.new)
   return (
     <Card className={`mt-5 mb-5 m-auto ${classes.card}`}>
       <Card.Header className={classes.header}>
@@ -203,18 +221,29 @@ const Chat = () => {
           </>
         )}
 
-        {!chattingUser && chatUsers && !search && (
+        {!chattingUser && !search && (
           <div className={classes.recent}>
-            <p>
-              {chatUsers && chatUsers.length > 0
-                ? "Recent Chats"
-                : "No recent chats"}
-            </p>
-            <UsersList
-              users={chatUsers}
-              chatMode={true}
-              onProfileClick={profileClickHandler}
-            />
+            {chatUsers.length === 0 && <p>No recent chats</p>}
+            {newChatUsers.length > 0 && (
+              <>
+                <p>New Chats</p>
+                <UsersList
+                  users={newChatUsers}
+                  chatMode={true}
+                  onProfileClick={profileClickHandler}
+                />
+              </>
+            )}
+            {oldChatUsers.length > 0 && (
+              <>
+                <p>Old Chats</p>
+                <UsersList
+                  users={oldChatUsers}
+                  chatMode={true}
+                  onProfileClick={profileClickHandler}
+                />
+              </>
+            )}
           </div>
         )}
       </Card.Body>
