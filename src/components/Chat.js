@@ -75,10 +75,7 @@ const Chat = () => {
 
       if (!response) return
 
-      const users = response.data.map((u) => {
-        return { ...u, new: false }
-      })
-      setChatUsers(users)
+      setChatUsers(response.data)
     })()
   }, [getChats, token])
 
@@ -103,7 +100,7 @@ const Chat = () => {
         connection.invoke("SeenMessages", chattingUser.id)
       } else if (chatUsers.some((u) => u.id === user.id)) {
         const chats = [...chatUsers]
-        chats.find((c) => c.id === user.id).new = true
+        chats.find((c) => c.id === user.id).newChat = true
         setChatUsers(chats)
       } else {
         setChatUsers((prevUsers) => [...prevUsers, { ...user, new: true }])
@@ -140,15 +137,15 @@ const Chat = () => {
     const newChatUsers = [...chatUsers]
     const foundChatUser = newChatUsers.find((u) => u.id === user.id)
     if (foundChatUser) {
-      foundChatUser.new = false
+      foundChatUser.newChat = false
       setChatUsers(newChatUsers)
     }
 
     connection.invoke("SeenMessages", user.id)
   }
 
-  const newChatUsers = chatUsers.filter((u) => u.new)
-  const oldChatUsers = chatUsers.filter((u) => !u.new)
+  const newChatUsers = chatUsers.filter((u) => u.newChat)
+  const oldChatUsers = chatUsers.filter((u) => !u.newChat)
   return (
     <Card className={`mt-5 mb-5 m-auto ${classes.card}`}>
       <Card.Header className={classes.header}>
