@@ -24,7 +24,7 @@ const Chat = () => {
   const [chattingUser, setChattingUser] = useState(null)
   const [search, setSearch] = useState(false)
   const { isLoading: messagesLoading, sendRequest: getMessages } = useAxios()
-  const { isLoading: chatsLoading, sendRequest: getChats } = useAxios()
+  const { sendRequest: getChats } = useAxios()
   const token = useSelector((state) => state.auth.token)
   const isAuth = useSelector((state) => state.auth.isAuth)
   const authUserId = useSelector((state) => state.auth.user.id)
