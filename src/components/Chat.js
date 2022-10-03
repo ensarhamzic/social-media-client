@@ -84,22 +84,25 @@ const Chat = () => {
 
     connection.off("ReceiveMessage")
 
-    const handler = (user, message) => {
+    connection.on("ReceiveMessage", (user, message) => {
       if (
         (message.fromUserId === authUserId &&
           message.toUserId === chattingUser?.id) ||
         (message.fromUserId === chattingUser?.id &&
           message.toUserId === authUserId)
       ) {
+        if (chattingUser.messages.some((m) => m.id === message.id)) return
         const newMessages = [...chattingUser.messages]
         newMessages.push(message)
         setChattingUser((prevUser) => {
           return { ...prevUser, messages: newMessages }
         })
+      } else if (chatUsers.some((u) => u.id === user.id)) {
+      } else {
+        setChatUsers((prevUsers) => [...prevUsers, user])
       }
-    }
-    connection.on("ReceiveMessage", handler)
-  }, [authUserId, chattingUser, connection])
+    })
+  }, [authUserId, chattingUser, connection, chatUsers])
 
   if (!opened)
     return (
@@ -202,7 +205,11 @@ const Chat = () => {
 
         {!chattingUser && chatUsers && !search && (
           <div className={classes.recent}>
-            <p>Recent chats</p>
+            <p>
+              {chatUsers && chatUsers.length > 0
+                ? "Recent Chats"
+                : "No recent chats"}
+            </p>
             <UsersList
               users={chatUsers}
               chatMode={true}
