@@ -39,6 +39,14 @@ const Chat = () => {
       to: chattingUser.id,
     })
 
+    if (!chatUsers.some((u) => u.id === chattingUser.id)) {
+      const newUser = { ...chattingUser }
+      setChatUsers((prevUsers) => [
+        ...prevUsers,
+        { ...newUser, newChat: false },
+      ])
+    }
+
     setNewMessage("")
   }
 
@@ -85,6 +93,7 @@ const Chat = () => {
     connection.off("ReceiveMessage")
 
     connection.on("ReceiveMessage", (user, message) => {
+      setOpened(true)
       if (
         (message.fromUserId === authUserId &&
           message.toUserId === chattingUser?.id) ||
@@ -97,6 +106,7 @@ const Chat = () => {
         setChattingUser((prevUser) => {
           return { ...prevUser, messages: newMessages }
         })
+
         connection.invoke("SeenMessages", chattingUser.id)
       } else if (chatUsers.some((u) => u.id === user.id)) {
         console.log("sad")
@@ -122,6 +132,7 @@ const Chat = () => {
     )
 
   const profileClickHandler = async (user) => {
+    setSearch(false)
     setChattingUser({ ...user, messages: [] })
     const response = await getMessages({
       url: `/messages/${user.id}`,
@@ -178,12 +189,22 @@ const Chat = () => {
         )}
         {chattingUser && (
           <>
-            <MdOutlineArrowBackIosNew
-              onClick={() => {
-                setChattingUser(null)
-              }}
-            />
-            <div>{chattingUser.username}</div>
+            <div>
+              <MdOutlineArrowBackIosNew
+                onClick={() => {
+                  setChattingUser(null)
+                }}
+              />
+            </div>
+
+            <div>
+              {chattingUser.username}{" "}
+              <AiOutlineCloseCircle
+                onClick={() => {
+                  setOpened(false)
+                }}
+              />
+            </div>
           </>
         )}
       </Card.Header>
